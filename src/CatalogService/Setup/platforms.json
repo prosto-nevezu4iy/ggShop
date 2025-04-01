@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "9c58c2bb-b366-49f0-b524-3be2e49b4a8f",
+    "Name": "PC"
+  },
+  {
+    "Id": "6c23d0de-2fdd-49a5-b929-e5e72ba02add",
+    "Name": "PlayStation"
+  },
+  {
+    "Id": "54588f36-e280-4c21-9bb4-c37c15e1232f",
+    "Name": "Xbox"
+  },
+  {
+    "Id": "ef4e94a1-0b00-49b9-a5d3-7e29e714b9ab",
+    "Name": "Nintendo Switch"
+  }
+]

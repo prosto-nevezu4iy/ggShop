@@ -1,0 +1,409 @@
+[
+  {
+    "Id": "b82f84e3-55b2-44b6-9489-7d2a1992f84c",
+    "Name": "Grand Theft Auto V",
+    "Description": "Open-world action game featuring missions, heists, driving, and shooting. Players control three protagonists and switch between them during gameplay.",
+    "FullDescription": "Grand Theft Auto V is a 2013 action-adventure game developed by Rockstar North and published by Rockstar Games. It is the seventh main entry in the Grand Theft Auto series, following 2008's Grand Theft Auto IV, and the fifteenth instalment overall.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 29.99,
+    "Discount": 20,
+    "AvailableStock": 150,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      }
+    ],
+    "Publisher": {
+      "Name": "Rockstar Games"
+    },
+    "ReleaseDate": "2013-09-17",
+    "Rating": 90,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_V#/media/File:Grand_Theft_Auto_V.png",
+    "TrailerUrl": "https://www.youtube.com/watch?v=QkkoHAzjnUs",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=hvoD7ehZPcM",
+    "ScreenShotUrls": [
+      "https://static.wikia.nocookie.net/gtawiki/images/b/b5/GTAV-Screenshot1.jpg/revision/latest?cb=20120713152840",
+      "https://static.wikia.nocookie.net/gtawiki/images/b/b7/GTAV-Screenshot2.jpg/revision/latest?cb=20120713152907",
+      "https://static.wikia.nocookie.net/gtawiki/images/c/c4/GTAV-Screenshot4.jpg/revision/latest?cb=20120820140555"
+    ],
+    "Genres": [
+      {
+        "Name": "Action"
+      },
+      {
+        "Name": "Open-World"
+      }
+    ]
+  },
+  {
+    "Id": "28a68174-ea64-4e3a-812e-a0f0a78c3c60",
+    "Name": "Call of Duty: Modern Warfare II",
+    "Description": "A fast-paced first-person shooter set in modern warfare scenarios.",
+    "FullDescription": "Call of Duty: Modern Warfare II delivers an immersive campaign and intense multiplayer battles with cutting-edge visuals and mechanics.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 59.99,
+    "Discount": 10,
+    "AvailableStock": 200,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      }
+    ],
+    "Publisher": {
+      "Name": "Activision"
+    },
+    "ReleaseDate": "2022-10-28",
+    "Rating": 80,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Call_of_Duty:_Modern_Warfare_II_(2022_video_game)#/media/File:Call_of_Duty_Modern_Warfare_II_Key_Art.jpg",
+    "TrailerUrl": "https://www.youtube.com/watch?v=ztjfwecrY8E",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=ho3jY94txHI",
+    "ScreenShotUrls": [
+      "https://gmedia.playstation.com/is/image/SIEPDC/cod-mwii-screenshot-02-en-9jun22?$2400px$",
+      "https://gmedia.playstation.com/is/image/SIEPDC/cod-mwii-screenshot-06-en-9jun22?$2400px$"
+    ],
+    "Genres": [
+      {
+        "Name": "Shooter"
+      }
+    ]
+  },
+  {
+    "Id": "96e12492-3e08-480e-839a-7c771479592f",
+    "Name": "The Witcher 3: Wild Hunt",
+    "Description": "An award-winning RPG set in a dark fantasy world.",
+    "FullDescription": "Play as Geralt of Rivia, a monster hunter, as you explore a vast open world filled with quests, deep storytelling, and breathtaking visuals.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 39.99,
+    "Discount": 30,
+    "AvailableStock": 120,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      },
+      {
+        "Name": "Nintendo Switch"
+      }
+    ],
+    "Publisher": {
+      "Name": "CD Projekt Red"
+    },
+    "ReleaseDate": "2015-05-19",
+    "Rating": 100,
+    "ImageUrl": "https://en.wikipedia.org/wiki/The_Witcher_3:_Wild_Hunt#/media/File:Witcher_3_cover_art.jpg",
+    "TrailerUrl": "https://www.youtube.com/watch?v=c0i88t0Kacs",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=XHrskkHf958",
+    "ScreenShotUrls": [
+      "https://www.thewitcher.com/en/screenshot-contest/art/19375",
+      "https://www.thewitcher.com/en/screenshot-contest/art/13151"
+    ],
+    "Genres": [
+      {
+        "Name": "RPG"
+      },
+      {
+        "Name": "Action"
+      }
+    ]
+  },
+  {
+    "Id": "255b3768-f6b0-4941-bb38-64612a29efe9",
+    "Name": "Elden Ring",
+    "Description": "An open-world action RPG with challenging combat and deep lore.",
+    "FullDescription": "Elden Ring is a dark fantasy action RPG developed by FromSoftware. Players explore the Lands Between, battling formidable enemies and uncovering secrets in a vast open world.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 59.99,
+    "Discount": 15,
+    "AvailableStock": 180,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      }
+    ],
+    "Publisher": {
+      "Name": "Bandai Namco Entertainment"
+    },
+    "ReleaseDate": "2022-02-25",
+    "Rating": 90,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Elden_Ring#/media/File:Elden_Ring_Box_art.jpg",
+    "TrailerUrl": "https://www.youtube.com/watch?v=AKXiKBnzpBQ",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=E3Huy2cdih0",
+    "ScreenShotUrls": [
+      "https://www.rpgfan.com/wp-content/uploads/2021/06/Elden-Ring-Screenshot-030.jpg",
+      "https://www.rpgfan.com/wp-content/uploads/2021/06/Elden-Ring-Screenshot-029.jpg"
+    ],
+    "Genres": [
+      {
+        "Name": "Action RPG"
+      },
+      {
+        "Name": "Open-World"
+      }
+    ]
+  },
+  {
+    "Id": "74d77d8c-aaa4-44f7-a781-2711775e5d51",
+    "Name": "Halo Infinite",
+    "Description": "A sci-fi first-person shooter featuring Master Chief.",
+    "FullDescription": "Halo Infinite continues the epic saga of Master Chief in an open-world FPS experience. With both campaign and multiplayer modes, it delivers intense combat and a rich storyline.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 49.99,
+    "Discount": 20,
+    "AvailableStock": 220,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "Xbox"
+      }
+    ],
+    "Publisher": {
+      "Name": "Microsoft"
+    },
+    "ReleaseDate": "2021-12-08",
+    "Rating": 80,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Halo_Infinite#/media/File:Halo_Infinite.png",
+    "TrailerUrl": "https://www.youtube.com/watch?v=PyMlV5_HRWk",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=rFh2i4AlPD4",
+    "ScreenShotUrls": [
+      "https://ip.trueachievements.com/remote/www.trueachievements.com/customimages/136309.jpg?width=900",
+      "https://ip.trueachievements.com/remote/www.trueachievements.com/customimages/134261.jpg?width=900"
+    ],
+    "Genres": [
+      {
+        "Name": "Shooter"
+      },
+      {
+        "Name": "Sci-Fi"
+      }
+    ]
+  },
+  {
+    "Id": "df0ce4f0-c4f7-49ac-94fe-4d405ecc99b4",
+    "Name": "Cyberpunk 2077",
+    "Description": "An open-world RPG set in a futuristic cyberpunk city.",
+    "FullDescription": "Cyberpunk 2077 is an action RPG developed by CD Projekt Red. Players explore Night City, engage in intense combat, and make story-altering choices in a cybernetic future.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 49.99,
+    "Discount": 25,
+    "AvailableStock": 130,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      }
+    ],
+    "Publisher": {
+      "Name": "CD Projekt Red"
+    },
+    "ReleaseDate": "2020-12-10",
+    "Rating": 80,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Cyberpunk_2077#/media/File:Cyberpunk_2077_box_art.jpg",
+    "TrailerUrl": "https://www.youtube.com/watch?v=LembwKDo1Dk",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=8X2kIfS6fb8",
+    "ScreenShotUrls": [
+      "https://64.media.tumblr.com/5c49d109bbcf26f474a3747d150d618e/f5120ffcfd2786f1-2f/s1280x1920/f0c78dd1fa99afba1eb63e3c91932c71a7bba985.png",
+      "https://64.media.tumblr.com/8d174721010d77999b931258de4fe8fd/b1a139a5e7d738cd-42/s1280x1920/c7987d664a573f0edd13d1afde9eb4ad3797c9ef.png"
+    ],
+    "Genres": [
+      {
+        "Name": "RPG"
+      },
+      {
+        "Name": "Open-World"
+      }
+    ]
+  },
+  {
+    "Id": "de64cce5-b61b-44cd-a7ed-fa34e72cad79",
+    "Name": "Doom Eternal",
+    "Description": "A fast-paced, demon-slaying first-person shooter.",
+    "FullDescription": "Doom Eternal is an FPS developed by id Software, featuring intense, high-speed combat against hordes of demons across hellish landscapes.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 39.99,
+    "Discount": 30,
+    "AvailableStock": 200,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      },
+      {
+        "Name": "Nintendo Switch"
+      }
+    ],
+    "Publisher": {
+      "Name": "Bethesda Softworks"
+    },
+    "ReleaseDate": "2020-03-20",
+    "Rating": 90,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Doom_Eternal#/media/File:Cover_Art_of_Doom_Eternal.png",
+    "TrailerUrl": "https://www.youtube.com/watch?v=2HOClc6Svg4",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=_UuktemkCFI",
+    "ScreenShotUrls": [
+      "https://ip.trueachievements.com/remote/store-images.s-microsoft.com/image/apps.53192.14633846388270955.183654ce-6460-48f9-a060-3a7d8d15ff8f.a871caa3-74c9-48e4-8686-bc1432ba84f2?width=900",
+      "https://ip.trueachievements.com/remote/store-images.s-microsoft.com/image/apps.5082.64234556958324114.f920cec9-b4fb-47f4-bbac-667ed8bb82e6.5f664c05-6064-46da-ad74-e385f06e681d?width=900"
+    ],
+    "Genres": [
+      {
+        "Name": "Shooter"
+      },
+      {
+        "Name": "Action"
+      }
+    ]
+  },
+  {
+    "Id": "80b8a08d-6018-457d-98de-1217507c724c",
+    "Name": "Red Dead Redemption 2",
+    "Description": "An epic tale of life in America�s unforgiving heartland.",
+    "FullDescription": "Red Dead Redemption 2 is a sprawling Western epic that tells the story of Arthur Morgan and the Van der Linde gang as they navigate the decline of the Wild West. The game features a vast open world, deep storytelling, and a richly detailed environment.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 59.99,
+    "Discount": 15,
+    "AvailableStock": 200,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      }
+    ],
+    "Publisher": {
+      "Name": "Take-Two Interactive"
+    },
+    "ReleaseDate": "2018-10-26",
+    "Rating": 97,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Red_Dead_Redemption_2#/media/File:Red_Dead_Redemption_II.jpg",
+    "TrailerUrl": "https://www.youtube.com/watch?v=F63h3v9QV7w",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=gmA6MrX81z4",
+    "ScreenShotUrls": [
+      "https://media-rockstargames-com.akamaized.net/mfe6/prod/__common/img/137a6c809cd715dfac2aeffd35138a8e.jpg?im=Resize=1920",
+      "https://media-rockstargames-com.akamaized.net/mfe6/prod/__common/img/43c36051e6efa43d5c45c19c83c5b17f.jpg?im=Resize=1920"
+    ],
+    "Genres": [
+      {
+        "Name": "Action"
+      },
+      {
+        "Name": "Adventure"
+      },
+      {
+        "Name": "Open World"
+      }
+    ]
+  },
+  {
+    "Id": "9712d934-3996-43da-b460-6760706bbce2",
+    "Name": "God of War (2018)",
+    "Description": "A father and son journey through a dangerous world of gods and monsters.",
+    "FullDescription": "God of War (2018) is a soft reboot of the iconic franchise, following Kratos and his son Atreus as they embark on a deeply personal and emotional journey through the realms of Norse mythology. The game combines intense combat, exploration, and a gripping narrative.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 49.99,
+    "Discount": 10,
+    "AvailableStock": 120,
+    "Platforms": [
+      {
+        "Name": "PlayStation"
+      }
+    ],
+    "Publisher": {
+      "Name": "Sony Interactive Entertainment"
+    },
+    "ReleaseDate": "2018-04-20",
+    "Rating": 94,
+    "ImageUrl": "https://en.wikipedia.org/wiki/God_of_War_(2018_video_game)#/media/File:God_of_War_4_cover.jpg",
+    "TrailerUrl": "https://www.youtube.com/watch?v=K0u_kAWLJOA",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=rClXqZD2Xrs",
+    "ScreenShotUrls": [
+      "https://cdn.mobygames.com/screenshots/7508460-god-of-war-playstation-4-kratos-has-no-trouble-lugging-around-he.jpg",
+      "https://cdn.mobygames.com/screenshots/7526422-god-of-war-playstation-4-there-are-many-places-in-the-game-when-.jpg"
+    ],
+    "Genres": [
+      {
+        "Name": "Action"
+      },
+      {
+        "Name": "Adventure"
+      }
+    ]
+  },
+  {
+    "Id": "805802c6-029b-46c0-b687-2f343027a941",
+    "Name": "Dark Souls III",
+    "Description": "A challenging action RPG set in a dark fantasy world.",
+    "FullDescription": "Dark Souls III is the final installment in the critically acclaimed Dark Souls series. Known for its punishing difficulty, intricate level design, and deep lore, the game offers a rewarding experience for players who persevere through its challenges.",
+    "SystemRequirements": "NotImplemented...",
+    "Price": 39.99,
+    "AvailableStock": 80,
+    "Platforms": [
+      {
+        "Name": "PC"
+      },
+      {
+        "Name": "PlayStation"
+      },
+      {
+        "Name": "Xbox"
+      }
+    ],
+    "Publisher": {
+      "Name": "Bandai Namco Entertainment"
+    },
+    "ReleaseDate": "2016-04-12",
+    "Rating": 89,
+    "ImageUrl": "https://en.wikipedia.org/wiki/Dark_Souls_III#/media/File:Dark_souls_3_cover_art.jpg",
+    "TrailerUrl": "https://www.youtube.com/watch?v=_zDZYrIUgKE",
+    "BackgroundUrl": "https://www.youtube.com/watch?v=cWBwFhUv1-8",
+    "ScreenShotUrls": [
+      "https://p325k7wa.twic.pics/high/dark-souls/dark-souls-3/02-screenshots/1-new-screens/In%20game%20(7).jpg?twic=v1/step=10/quality=80/max=1790x1016",
+      "https://p325k7wa.twic.pics/high/dark-souls/dark-souls-3/02-screenshots/1-new-screens/In%20game%20(8).jpg?twic=v1/step=10/quality=80/max=1790x1016"
+    ],
+    "Genres": [
+      {
+        "Name": "Action"
+      },
+      {
+        "Name": "RPG"
+      }
+    ]
+  }
+]

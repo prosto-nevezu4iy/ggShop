@@ -1,0 +1,38 @@
+[
+  {
+    "Id": "651b1cd3-98c1-4b03-9efc-a815e2d2ecd7",
+    "Name": "Action"
+  },
+  {
+    "Id": "e90bd066-6a75-4f92-b0bb-f0dd72246aa9",
+    "Name": "Action RPG"
+  },
+  {
+    "Id": "c59819c0-c339-41b8-865d-beea2b9adbc9",
+    "Name": "Shooter"
+  },
+  {
+    "Id": "a9936d53-c62c-47c2-ae90-5f53479de53c",
+    "Name": "Sci-Fi"
+  },
+  {
+    "Id": "bee99a26-4e05-4949-8b44-1c73c065ac2e",
+    "Name": "RPG"
+  },
+  {
+    "Id": "632cb52a-6601-47b1-aa6e-213bcda64385",
+    "Name": "Open-World"
+  },
+  {
+    "Id": "90ce08a9-a7bf-4804-bddf-4b164a34b9a4",
+    "Name": "Strategy (RTS & Turn-Based)"
+  },
+  {
+    "Id": "9698b485-1712-438d-b844-daf8da7cbcc8",
+    "Name": "Horror / Survival Horror"
+  },
+  {
+    "Id": "360ed83c-43a0-4dda-9c29-a029cbfc670f",
+    "Name": "Adventure"
+  }
+]

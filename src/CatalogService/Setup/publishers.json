@@ -1,0 +1,50 @@
+[
+  {
+    "Id": "b37ce27a-e2cb-4e09-9f36-0b864cac4779",
+    "Name": "Sony Interactive Entertainment"
+  },
+  {
+    "Id": "075ed83c-ff12-4b75-b545-dc77027d6dfb",
+    "Name": "Microsoft"
+  },
+  {
+    "Id": "17ba31f1-72a5-4bde-8932-2c2569f9b0fa",
+    "Name": "Electronic Arts"
+  },
+  {
+    "Id": "19951ae3-fbc2-4cbb-88dc-4ce9193f2b0d",
+    "Name": "Ubisoft"
+  },
+  {
+    "Id": "2f167aab-ad92-4074-9536-0cf2c23af5d3",
+    "Name": "Take-Two Interactive"
+  },
+  {
+    "Id": "9f1ca221-f780-4593-b889-a531b8b3d73f",
+    "Name": "Capcom"
+  },
+  {
+    "Id": "34c29d8a-b420-4741-9d54-e84b2b021693",
+    "Name": "Bandai Namco Entertainment"
+  },
+  {
+    "Id": "b1fe5238-878a-4f5b-90fd-019819f9156a",
+    "Name": "Activision"
+  },
+  {
+    "Id": "a2d036c4-ad35-440e-8900-6c86e2d84e91",
+    "Name": "CD Projekt Red"
+  },
+  {
+    "Id": "ea493a31-9058-4f0c-b069-86fd3173eadc",
+    "Name": "Bethesda Softworks"
+  },
+  {
+    "Id": "b71dd110-f8e4-426f-ac74-da67d569c1ce",
+    "Name": "Rockstar Games"
+  },
+  {
+    "Id": "8dc8c48d-3d4b-4355-8e50-82db692eb228",
+    "Name": "Larian Studios"
+  }
+]
