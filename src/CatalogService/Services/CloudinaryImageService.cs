@@ -90,8 +90,6 @@ public class CloudinaryImageService : IImageService
 
         var scheduler = await _schedulerFactory.GetScheduler();
 
-        if (scheduler.CheckExists(job.Key).Result) await scheduler.DeleteJob(job.Key);
-
         await scheduler.ScheduleJob(job, trigger);
     }
 
