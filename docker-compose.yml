@@ -14,5 +14,15 @@ services:
     ports:
       - 5341:5341
       - 8081:80
+  redis:
+    image: redis:latest
+    restart: always
+    ports: 
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - redisdata:/data
 volumes:
   pgdata:
+  redisdata:
+    driver: local
