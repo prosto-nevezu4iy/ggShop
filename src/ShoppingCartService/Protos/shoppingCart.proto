@@ -13,7 +13,7 @@ message GetShoppingCartRequest {
 }
 
 message UserShoppingCartResponse {
-	repeated ShoppingCartItem Items =1;
+	repeated ShoppingCartItem items = 1;
 }
 
 message ShoppingCartItem {
@@ -22,7 +22,7 @@ message ShoppingCartItem {
 }
 
 message UpdateShoppingCartRequest {
-    repeated ShoppingCartItem items = 2;
+    repeated ShoppingCartItem items = 1;
 }
 
 message DeleteShoppingCartRequest {

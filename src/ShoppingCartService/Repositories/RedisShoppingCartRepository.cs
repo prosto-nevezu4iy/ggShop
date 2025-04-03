@@ -33,7 +33,7 @@ public class RedisShoppingCartRepository : IShoppingCartRepository
     public async Task<UserShoppingCart> UpdateBasketAsync(UserShoppingCart shoppingCart)
     {
         var serializedShoppingCart = JsonSerializer.Serialize(shoppingCart);
-        var createdShoppingCart = await _redis.StringSetAsync(GetShoppingCartKey(shoppingCart.UserId), serializedShoppingCart);
+        var createdShoppingCart = await _redis.StringSetAsync(GetShoppingCartKey(shoppingCart.UserId), serializedShoppingCart, TimeSpan.FromDays(30));
 
         if (!createdShoppingCart)
         {
@@ -47,6 +47,6 @@ public class RedisShoppingCartRepository : IShoppingCartRepository
 
     public async Task<bool> DeleteBasketAsync(string id)
     {
-        return await _redis.KeyDeleteAsync(id);
+        return await _redis.KeyDeleteAsync(GetShoppingCartKey(id));
     }
 }
