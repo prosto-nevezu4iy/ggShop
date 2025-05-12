@@ -4,6 +4,8 @@ using CatalogService.DTOs;
 using CatalogService.Entities;
 using CatalogService.Infrastructure;
 using CatalogService.RequestHelpers;
+using Contracts;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Services;
@@ -13,12 +15,14 @@ public class CatalogService : ICatalogService
     private readonly CatalogContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IImageService _imageService;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CatalogService(CatalogContext dbContext, IMapper mapper, IImageService imageService)
+    public CatalogService(CatalogContext dbContext, IMapper mapper, IImageService imageService, IPublishEndpoint publishEndpoint)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _imageService = imageService;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Guid> CreateGameAsync(CreateGameDto createGameDto)
@@ -134,7 +138,11 @@ public class CatalogService : ICatalogService
     public async Task DeleteGameAsync(Game game)
     {
         _dbContext.Games.Remove(game);
+
+        await _publishEndpoint.Publish<GameDeleted>((new {Id = game.Id}));
+        
         await _dbContext.SaveChangesAsync();
+        
         await _imageService.DeleteImageJob(game.Id, game.ImageUrl);
         await _imageService.DeleteScreenShotsJob(game.Id, game.ScreenShotUrls);
     }

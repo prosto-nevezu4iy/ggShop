@@ -14,6 +14,8 @@ try
     var app = builder.Build();
 
     app.UseSerilogRequestLogging();
+    
+    app.UseExceptionHandler();
 
     //app.UseStatusCodePages();
 

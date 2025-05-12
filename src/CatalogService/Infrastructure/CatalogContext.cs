@@ -1,5 +1,6 @@
 ﻿using CatalogService.Entities;
 using CatalogService.Infrastructure.Configurations;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Infrastructure;
@@ -19,5 +20,9 @@ public class CatalogContext(DbContextOptions options) : DbContext(options)
         modelBuilder.ApplyConfiguration(new GenreEntityTypeConfiguration());
 
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.AddInboxStateEntity();
+        modelBuilder.AddOutboxMessageEntity();
+        modelBuilder.AddOutboxStateEntity();
     }
 }

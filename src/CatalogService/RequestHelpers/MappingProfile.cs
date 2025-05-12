@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CatalogService.DTOs;
 using CatalogService.Entities;
+using Contracts;
 
 namespace CatalogService.RequestHelpers;
 

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogService", "src\Catal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartService", "src\ShoppingCartService\ShoppingCartService.csproj", "{DDA04BE5-E813-4310-AD67-D2097C2C036B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "src\Contracts\Contracts.csproj", "{C5D36049-E800-404F-96FC-DC79FB69486A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,18 @@ Global
 		{DDA04BE5-E813-4310-AD67-D2097C2C036B}.Release|x64.Build.0 = Release|Any CPU
 		{DDA04BE5-E813-4310-AD67-D2097C2C036B}.Release|x86.ActiveCfg = Release|Any CPU
 		{DDA04BE5-E813-4310-AD67-D2097C2C036B}.Release|x86.Build.0 = Release|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Release|x64.Build.0 = Release|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5D36049-E800-404F-96FC-DC79FB69486A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +64,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3C26AB57-907A-44AB-8F77-151D33231072} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{DDA04BE5-E813-4310-AD67-D2097C2C036B} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{C5D36049-E800-404F-96FC-DC79FB69486A} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
