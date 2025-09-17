@@ -13,8 +13,11 @@ try
 
     var app = builder.Build();
 
+    app.UseAuthentication();
+    app.UseAuthorization();
+
     app.UseSerilogRequestLogging();
-    
+
     app.UseExceptionHandler();
 
     //app.UseStatusCodePages();

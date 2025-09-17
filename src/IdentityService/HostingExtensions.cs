@@ -2,6 +2,7 @@ using System.Globalization;
 using Duende.IdentityServer;
 using IdentityService.Data;
 using IdentityService.Models;
+using IdentityService.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -51,7 +52,7 @@ internal static class HostingExtensions
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -75,26 +76,15 @@ internal static class HostingExtensions
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddAspNetIdentity<ApplicationUser>()
+            .AddProfileService<CustomProfileService>()
             .AddLicenseSummary();
 
-        builder.Services.AddAuthentication()
-            .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
-            {
-                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                options.SignOutScheme = IdentityServerConstants.SignoutScheme;
-                options.SaveTokens = true;
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.Lax;
+        });
 
-                options.Authority = "https://demo.duendesoftware.com";
-                options.ClientId = "interactive.confidential";
-                options.ClientSecret = "secret";
-                options.ResponseType = "code";
-
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = "name",
-                    RoleClaimType = "role"
-                };
-            });
+        builder.Services.AddAuthentication();
 
         return builder.Build();
     }

@@ -2,6 +2,7 @@
 using CatalogService.RequestHelpers;
 using CatalogService.Services;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CatalogService.Endpoints;
@@ -36,6 +37,7 @@ public static class CatalogEndpoints
         return TypedResults.Ok(game);
     }
 
+    [Authorize]
     public static async Task<Results<Created<Guid>, ValidationProblem>> CreateGame(CreateGameDto createGameDto, IValidator<CreateGameDto> validator, ICatalogService catalogService)
     {
         var result = await validator.ValidateAsync(createGameDto);
@@ -50,6 +52,7 @@ public static class CatalogEndpoints
         return TypedResults.Created($"/api/catalog/{createdGameId}", createdGameId);
     }
 
+    [Authorize]
     public static async Task<Results<NoContent, NotFound, ValidationProblem>> UpdateGame(Guid id, UpdateGameDto updateGameDto, IValidator<UpdateGameDto> validator, ICatalogService catalogService)
     {
         var result = await validator.ValidateAsync(updateGameDto);
@@ -71,6 +74,7 @@ public static class CatalogEndpoints
         return TypedResults.NoContent();
     }
 
+    [Authorize]
     public static async Task<Results<NoContent, NotFound>> DeleteGame(Guid id, ICatalogService catalogService)
     {
         var game = await catalogService.GetGameEntityByIdAsync(id);

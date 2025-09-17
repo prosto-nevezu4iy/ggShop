@@ -6,6 +6,7 @@ using CatalogService.Validators;
 using CloudinaryDotNet;
 using FluentValidation;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Quartz;
@@ -44,7 +45,7 @@ public static class ServiceExtensions
 
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
-        
+
         builder.Services.AddQuartz();
 
         builder.Services.AddQuartzHostedService(options =>
@@ -66,5 +67,16 @@ public static class ServiceExtensions
                 cfg.ConfigureEndpoints(context);
             });
         });
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = builder.Configuration["IdentityServiceUrl"];
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters.ValidateAudience = false;
+                options.TokenValidationParameters.NameClaimType = "username";
+            });
+
+        builder.Services.AddAuthorization();
     }
 }
