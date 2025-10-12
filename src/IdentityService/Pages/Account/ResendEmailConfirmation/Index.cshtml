@@ -1,0 +1,29 @@
+@page
+@model IdentityService.Pages.Account.ResendEmailConfirmation.Index
+@{
+    ViewData["Title"] = "Resend email confirmation";
+}
+
+<div>
+    <partial name="_ValidationSummary" />
+    <partial name="_StatusMessage" model="Model.Input.StatusMessage" />
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header">
+                    <h2>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label asp-for="Input.Email"></label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Resend</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

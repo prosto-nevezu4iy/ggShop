@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 using Duende.IdentityModel;
 using Duende.IdentityServer.Models;
@@ -16,10 +17,32 @@ public class CustomProfileService(UserManager<ApplicationUser> userManager) : IP
             ?? throw new Exception("User not found");
         var existingClaims = await userManager.GetClaimsAsync(user);
 
-        var claims = new List<Claim>
+        var claims = new List<Claim>();
+
+        if (!string.IsNullOrEmpty(user.UserName))
         {
-            new Claim("username", user.UserName ?? string.Empty),
-        };
+            claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+        }
+
+        if (!string.IsNullOrEmpty(user.FirstName))
+        {
+            claims.Add(new Claim(ClaimTypes.GivenName, user.FirstName));
+        }
+
+        if (!string.IsNullOrEmpty(user.LastName))
+        {
+            claims.Add(new Claim(ClaimTypes.Surname, user.LastName));
+        }
+
+        if (user.DateOfBirth.HasValue)
+        {
+            claims.Add(new Claim(ClaimTypes.DateOfBirth, user.DateOfBirth.Value.ToString(CultureInfo.InvariantCulture), ClaimValueTypes.DateTime));
+        }
+
+        if (!string.IsNullOrEmpty(user.AvatarUrl))
+        {
+            claims.Add(new Claim("avatar_url", user.AvatarUrl));
+        }
 
         context.IssuedClaims.AddRange(claims);
 

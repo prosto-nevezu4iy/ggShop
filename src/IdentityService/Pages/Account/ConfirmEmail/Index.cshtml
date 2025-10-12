@@ -1,0 +1,12 @@
+@page
+@model IdentityService.Pages.Account.ConfirmEmail.Index
+@{
+    ViewData["Title"] = "Confirm email";
+}
+
+<h1>@ViewData["Title"]</h1>
+<partial name="_StatusMessage" model="Model.Input.StatusMessage" />
+<a class="pb-2 d-block" asp-page="../Login/Index"
+   asp-route-returnUrl="@Model.Input.ReturnUrl">
+    Login here
+</a>

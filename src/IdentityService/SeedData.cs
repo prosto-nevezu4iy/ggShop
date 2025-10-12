@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 using Duende.IdentityModel;
 using IdentityService.Data;
@@ -24,11 +25,15 @@ public class SeedData
             var alice = userMgr.FindByNameAsync("alice").Result;
             if (alice == null)
             {
+                var dateOfBirth = new DateOnly(1967, 5, 21);
                 alice = new ApplicationUser
                 {
                     UserName = "alice",
                     Email = "AliceSmith@example.com",
                     EmailConfirmed = true,
+                    FirstName = "Alice",
+                    LastName = "Smith",
+                    DateOfBirth = dateOfBirth
                 };
                 var result = userMgr.CreateAsync(alice, "Pass123$").Result;
                 if (!result.Succeeded)
@@ -36,9 +41,11 @@ public class SeedData
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = userMgr.AddClaimsAsync(alice, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Alice Smith")
-                        }).Result;
+                result = userMgr.AddClaimsAsync(alice, [
+                    new Claim(JwtClaimTypes.NickName, "alice"),
+                    new Claim(JwtClaimTypes.GivenName, "Alice"),
+                    new Claim(JwtClaimTypes.FamilyName, "Smith")
+                ]).Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
@@ -53,11 +60,15 @@ public class SeedData
             var bob = userMgr.FindByNameAsync("bob").Result;
             if (bob == null)
             {
+                var dateOfBirth = new DateOnly(1987, 7, 12);
                 bob = new ApplicationUser
                 {
                     UserName = "bob",
                     Email = "BobSmith@example.com",
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    FirstName = "Bob",
+                    LastName = "Smith",
+                    DateOfBirth = dateOfBirth
                 };
                 var result = userMgr.CreateAsync(bob, "Pass123$").Result;
                 if (!result.Succeeded)
@@ -65,9 +76,11 @@ public class SeedData
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = userMgr.AddClaimsAsync(bob, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Bob Smith")
-                        }).Result;
+                result = userMgr.AddClaimsAsync(bob, [
+                    new Claim(JwtClaimTypes.NickName, "bob"),
+                    new Claim(JwtClaimTypes.GivenName, "Bob"),
+                    new Claim(JwtClaimTypes.FamilyName, "Smith")
+                ]).Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);

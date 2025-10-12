@@ -1,0 +1,35 @@
+@page
+@model IdentityService.Pages.Account.Manage.ChangePassword.Index
+@{
+    ViewData["Title"] = "Change password";
+}
+
+<div>
+    <partial name="_StatusMessage" for="Input.StatusMessage" />
+    <partial name="_ValidationSummary" />
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card-header">
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="card-body">
+                <form id="change-password-form" method="post">
+                    <div class="form-group">
+                        <label asp-for="Input.OldPassword"></label>
+                        <input asp-for="Input.OldPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Enter the old password"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.NewPassword"></label>
+                        <input asp-for="Input.NewPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter the new password"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter the new password"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

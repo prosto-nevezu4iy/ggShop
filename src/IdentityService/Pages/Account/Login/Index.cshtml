@@ -1,5 +1,5 @@
 @page
-@model IdentityService.Pages.Login.Index
+@model IdentityService.Pages.Account.Login.Index
 
 <div class="login-page">
     <partial name="_ValidationSummary" />
@@ -19,8 +19,8 @@
                             <input type="hidden" asp-for="Input.ReturnUrl" />
 
                             <div class="form-group">
-                                <label asp-for="Input.Username"></label>
-                                <input class="form-control" placeholder="Username" asp-for="Input.Username" autofocus>
+                                <label asp-for="Input.Email"></label>
+                                <input class="form-control" placeholder="Email" asp-for="Input.Email" autofocus>
                             </div>
                             <div class="form-group">
                                 <label asp-for="Input.Password"></label>
@@ -39,9 +39,19 @@
                                 </div>
                             }
 
-                            <a class="pb-2 d-block" asp-page="../Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
-                                New User? Register here
-                            </a>
+                            <div>
+                                <p>
+                                    <a id="forgot-password" asp-page="../ForgotPassword/Index">Forgot your password?</a>
+                                </p>
+                                <p>
+                                    <a asp-page="../Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
+                                        New User? Register here
+                                    </a>
+                                </p>
+                                <p>
+                                    <a id="resend-confirmation" asp-page="../ResendEmailConfirmation/Index">Resend email confirmation</a>
+                                </p>
+                            </div>
 
                             <button class="btn btn-primary" name="Input.Button" value="login">Login</button>
                             <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>

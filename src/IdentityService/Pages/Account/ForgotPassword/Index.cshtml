@@ -1,0 +1,28 @@
+@page
+@model IdentityService.Pages.Account.ForgotPassword.Index
+@{
+    ViewData["Title"] = "Forgot your password?";
+}
+
+<div>
+    <partial name="_ValidationSummary" />
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header">
+                    <h2>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label asp-for="Input.Email"></label>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
+                        </div>
+                        <button class="btn btn-primary" name="Input.Button" value="forgotpassword">Reset Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

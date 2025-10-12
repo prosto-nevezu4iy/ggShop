@@ -1,4 +1,5 @@
 @using Duende.IdentityServer.Extensions
+@using IdentityService.Pages.Account.Manage
 @{
     #nullable enable
     string? name = null;
@@ -21,13 +22,16 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
-                    
+
+
                     <div class="dropdown-menu">
+                        <a class="dropdown-item" id="profile" asp-page="/Account/Manage/Profile/Index" aria-current="@ManageNavPages.IndexAriaCurrent(ViewContext)">Profile</a>
+                        <a class="dropdown-item" id="change-password" asp-page="/Account/Manage/ChangePassword/Index" aria-current="@ManageNavPages.ChangePasswordAriaCurrent(ViewContext)">Password</a>
                         <a class="dropdown-item" asp-page="/Account/Logout/Index">Logout</a>
                     </div>
-              </li>
+                </li>
             </ul>
         }
-    
+
     </nav>
 </div>

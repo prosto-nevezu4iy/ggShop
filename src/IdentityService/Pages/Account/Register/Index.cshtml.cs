@@ -1,51 +1,52 @@
 using System.Security.Claims;
+using System.Text;
 using Duende.IdentityModel;
 using IdentityService.Models;
+using IdentityService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
 
-namespace IdentityService.Pages.Register;
+namespace IdentityService.Pages.Account.Register;
 
 [SecurityHeaders]
 [AllowAnonymous]
-public class Index(UserManager<ApplicationUser> userManager) : PageModel
+public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailSender) : PageModel
 {
-    [BindProperty] public RegisterViewModel Input { get; set; } = default!;
+    [BindProperty] public RegisterViewModel Input { get; set; } = new();
     [BindProperty] public bool RegisterSuccess { get; set; }
 
-    public IActionResult OnGet(string returnUrl)
+    public IActionResult OnGet(string? returnUrl = null)
     {
-        Input = new RegisterViewModel
-        {
-            ReturnUrl = returnUrl
-        };
+        Input.ReturnUrl = returnUrl;
         return Page();
     }
 
     public async Task<IActionResult> OnPost()
     {
-        if (Input?.Button != "register") return Redirect("~/");
+        if (Input.Button != "register") return Redirect("~/");
 
         if (ModelState.IsValid)
         {
             var user = new ApplicationUser
             {
-                UserName = Input.Username,
-                Email = Input.Email,
-                EmailConfirmed = true
+                UserName = Input.Email.Split("@")[0],
+                Email = Input.Email
             };
 
-            var result = await userManager.CreateAsync(user, Input.Password!);
+            var result = await userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
             {
                 await userManager.AddClaimsAsync(user, [
-                    new Claim(JwtClaimTypes.Name, Input.FullName!),
+                    new Claim(JwtClaimTypes.NickName, user.UserName),
                 ]);
 
                 RegisterSuccess = true;
+
+                return RedirectToPage("/Account/RegisterConfirmation/Index", new { email = Input.Email, returnUrl = Input.ReturnUrl });
             }
         }
 
