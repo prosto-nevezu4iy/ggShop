@@ -1,7 +1,6 @@
 using brevo_csharp.Api;
 using brevo_csharp.Model;
 using IdentityService.Configurations;
-using IdentityService.Models;
 using Microsoft.Extensions.Options;
 using Configuration = brevo_csharp.Client.Configuration;
 using Task = System.Threading.Tasks.Task;
@@ -13,7 +12,6 @@ public class EmailSender(
     ILogger<EmailSender> logger)
     : IEmailSender
 {
-    private readonly ILogger<EmailSender> _logger = logger;
     private AuthMessageSenderOptions Options { get; } = optionsAccessor.Value;
 
     public async Task SendEmailAsync(string email, Dictionary<string, string> parameters, int templateId)
@@ -43,12 +41,12 @@ public class EmailSender(
 
         try
         {
-            CreateSmtpEmail result = await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
-            _logger.LogInformation($"Email to {email} queued successfully!");
+            await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
+            logger.LogInformation($"Email to {email} queued successfully!");
         }
         catch (Exception e)
         {
-            _logger.LogError("Exception when calling TransactionalEmailsApi.SendTransacEmail: " + e.Message );
+            logger.LogError("Exception when calling TransactionalEmailsApi.SendTransacEmail: " + e.Message );
         }
     }
 }

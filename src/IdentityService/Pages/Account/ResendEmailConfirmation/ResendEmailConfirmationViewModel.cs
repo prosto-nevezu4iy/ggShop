@@ -7,7 +7,7 @@ public class ResendEmailConfirmationViewModel
 {
     [Required]
     [EmailAddress]
-    public string? Email { get; set; } = string.Empty;
+    public required string Email { get; set; }
 
     [TempData] public string? StatusMessage { get; set; } = string.Empty;
 }

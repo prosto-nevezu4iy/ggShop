@@ -2,7 +2,6 @@ using System.Security.Claims;
 using System.Text;
 using Duende.IdentityModel;
 using IdentityService.Models;
-using IdentityService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +12,9 @@ namespace IdentityService.Pages.Account.Register;
 
 [SecurityHeaders]
 [AllowAnonymous]
-public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailSender) : PageModel
+public class Index(UserManager<ApplicationUser> userManager) : PageModel
 {
-    [BindProperty] public RegisterViewModel Input { get; set; } = new();
+    [BindProperty] public required RegisterViewModel Input { get; set; }
     [BindProperty] public bool RegisterSuccess { get; set; }
 
     public IActionResult OnGet(string? returnUrl = null)

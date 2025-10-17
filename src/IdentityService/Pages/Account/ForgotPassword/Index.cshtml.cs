@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Encodings.Web;
+using IdentityService.Constants;
 using IdentityService.Models;
 using IdentityService.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +15,7 @@ namespace IdentityService.Pages.Account.ForgotPassword;
 public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailSender) : PageModel
 {
     [BindProperty]
-    public ForgotPasswordViewModel Input { get; set; } = new();
+    public required ForgotPasswordViewModel Input { get; set; }
 
     public void OnGet()
     {
@@ -44,11 +45,11 @@ public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailS
 
             var emailParams = new Dictionary<string, string>
             {
-                { "USERNAME", user.UserName },
-                { "RESET_LINK", HtmlEncoder.Default.Encode(callbackUrl) }
+                { Email.Username, user.UserName! },
+                { Email.ResetLink, HtmlEncoder.Default.Encode(callbackUrl) }
             };
 
-            await emailSender.SendEmailAsync(Input.Email, emailParams, 2);
+            await emailSender.SendEmailAsync(Input.Email, emailParams, Email.ForgotPasswordTemplateId);
 
             return RedirectToPage("/Account/ForgotPasswordConfirmation/Index");
         }

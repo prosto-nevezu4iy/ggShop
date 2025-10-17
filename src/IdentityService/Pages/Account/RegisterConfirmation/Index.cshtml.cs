@@ -1,4 +1,5 @@
 using System.Text;
+using IdentityService.Constants;
 using IdentityService.Models;
 using IdentityService.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -30,11 +31,11 @@ public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailS
 
         var emailParams = new Dictionary<string, string>
         {
-            { "USERNAME", user.UserName },
-            { "LINK", emailConfirmationUrl ?? string.Empty }
+            { Email.Username, user.UserName! },
+            { Email.Link, emailConfirmationUrl ?? string.Empty }
         };
 
-        await emailSender.SendEmailAsync(user.Email, emailParams, 1);
+        await emailSender.SendEmailAsync(user.Email!, emailParams, Email.AccountConfirmationTemplateId);
 
         return Page();
     }

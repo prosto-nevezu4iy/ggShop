@@ -34,7 +34,8 @@ try
 
     app.Run();
 }
-catch (Exception ex) when (ex is not HostAbortedException)
+// See https://github.com/dotnet/runtime/issues/60600 re StopTheHostException
+catch (Exception ex) when (ex.GetType().Name is not "StopTheHostException")
 {
     Log.Fatal(ex, "Unhandled exception");
 }

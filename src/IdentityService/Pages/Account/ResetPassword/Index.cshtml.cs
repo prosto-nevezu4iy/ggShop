@@ -12,7 +12,7 @@ namespace IdentityService.Pages.Account.ResetPassword;
 public class Index(UserManager<ApplicationUser> userManager) : PageModel
 {
     [BindProperty]
-    public ResetPasswordViewModel Input { get; set; } = new();
+    public required ResetPasswordViewModel Input { get; set; }
 
     public IActionResult OnGet(string? code = null)
     {
@@ -20,15 +20,15 @@ public class Index(UserManager<ApplicationUser> userManager) : PageModel
         {
             return BadRequest("A code must be supplied for password reset.");
         }
-        else
-        {
-            Input = new ResetPasswordViewModel
-            {
-                Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
-            };
 
-            return Page();
-        }
+        Input = new ResetPasswordViewModel
+        {
+            Email = string.Empty,
+            Password = string.Empty,
+            Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+        };
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()

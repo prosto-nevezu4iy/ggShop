@@ -8,7 +8,7 @@ namespace IdentityService.Pages.Account.Manage.ChangePassword;
 
 public class Index(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ChangePasswordViewModel> logger) : PageModel
 {
-    [BindProperty] public ChangePasswordViewModel Input { get; set; } = new();
+    [BindProperty] public required ChangePasswordViewModel Input { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
