@@ -88,7 +88,10 @@ public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
             response.Items.Add(new ShoppingCartItem()
             {
                 GameId = item.GameId.ToString(),
+                Name = item.Name,
+                Price = (double) item.Price,
                 Quantity = item.Quantity,
+                ImageUrl = item.ImageUrl
             });
         }
 
@@ -107,7 +110,10 @@ public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
             response.Items.Add(new()
             {
                 GameId = Guid.Parse(item.GameId),
+                Name = item.Name,
+                Price = (decimal) item.Price,
                 Quantity = item.Quantity,
+                ImageUrl = item.ImageUrl
             });
         }
 
