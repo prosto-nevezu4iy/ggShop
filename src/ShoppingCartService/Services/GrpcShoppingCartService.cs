@@ -1,6 +1,8 @@
-﻿using Grpc.Core;
+﻿using Contracts.Constants;
+using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using ShoppingCartService.Entities;
+using ShoppingCartService.Extensions;
 using ShoppingCartService.Repositories;
 
 namespace ShoppingCartService.Services;
@@ -20,7 +22,7 @@ public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
     public override async Task<UserShoppingCartResponse> GetShoppingCart(GetShoppingCartRequest request, ServerCallContext context)
     {
         // Get user from identity
-        var userId = "ce280121-e2bd-49ef-91c1-ec74df096115";
+        var userId = GetUserId(context);
         if (string.IsNullOrEmpty(userId))
         {
             return new();
@@ -42,11 +44,11 @@ public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
     public override async Task<UserShoppingCartResponse> UpdateShoppingCart(UpdateShoppingCartRequest request, ServerCallContext context)
     {
         // Get user from identity
-        var userId = "ce280121-e2bd-49ef-91c1-ec74df096115";
+        var userId = GetUserId(context);
         if (string.IsNullOrEmpty(userId))
         {
             _logger.LogError("User does not exist");
-            //ThrowNotAuthenticated();
+            ThrowNotAuthenticated();
         }
 
         _logger.LogInformation("Begin UpdateShoppingCart call from method {Method} for basket id {Id}", context.Method, userId);
@@ -55,10 +57,8 @@ public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
         var response = await _shoppingCartRepository.UpdateBasketAsync(userShoppingCart);
         if (response is null)
         {
-
             _logger.LogError("ShoppingCart does not exist");
-
-            //ThrowBasketDoesNotExist(userId);
+            ThrowBasketDoesNotExist(userId);
         }
 
         return MapToUserShoppingCartResponse(response);
@@ -67,11 +67,11 @@ public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
     public override async Task<DeleteUserShoppingCartResponse> DeleteShoppingCart(DeleteShoppingCartRequest request, ServerCallContext context)
     {
         // Get user from identity
-        var userId = "ce280121-e2bd-49ef-91c1-ec74df096115";
+        var userId = GetUserId(context);
         if (string.IsNullOrEmpty(userId))
         {
             _logger.LogError("User does not exist");
-            //ThrowNotAuthenticated();
+            ThrowNotAuthenticated();
         }
 
         await _shoppingCartRepository.DeleteBasketAsync(userId);
@@ -112,5 +112,37 @@ public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
         }
 
         return response;
+    }
+
+    private static void ThrowNotAuthenticated() => throw new RpcException(new Status(StatusCode.Unauthenticated, "The caller is not authenticated."));
+
+    private static void ThrowBasketDoesNotExist(string userId) => throw new RpcException(new Status(StatusCode.NotFound, $"ShoppingCart with user id {userId} does not exist"));
+
+    private static string GetUserId(ServerCallContext context)
+    {
+        var httpContext = context.GetHttpContext();
+
+        var userIdentity = httpContext.User.Identity;
+
+        if (userIdentity is { IsAuthenticated: true })
+        {
+            return context.GetUserIdentity();
+        }
+
+        if (httpContext.Request.Cookies.ContainsKey(BasketConstants.CookieName))
+        {
+            return httpContext.Request.Cookies[BasketConstants.CookieName];
+        }
+
+        var userId = Guid.NewGuid().ToString();
+        var cookieOptions = new CookieOptions
+        {
+            IsEssential = true,
+            Expires = DateTime.Today.AddMonths(1)
+        };
+
+        httpContext.Response.Cookies.Append(BasketConstants.CookieName, userId, cookieOptions);
+
+        return userId;
     }
 }

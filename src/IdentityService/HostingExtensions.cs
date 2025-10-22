@@ -5,6 +5,7 @@ using IdentityService.Configurations;
 using IdentityService.Data;
 using IdentityService.Models;
 using IdentityService.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -99,6 +100,21 @@ internal static class HostingExtensions
         builder.Services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.SameSite = SameSiteMode.Lax;
+        });
+
+        builder.Services.AddMassTransit(x =>
+        {
+            x.AddEntityFrameworkOutbox<ApplicationDbContext>(o =>
+            {
+                o.QueryDelay = TimeSpan.FromSeconds(10);
+
+                o.UsePostgres();
+                o.UseBusOutbox();
+            });
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.ConfigureEndpoints(context);
+            });
         });
 
         builder.Services.AddAuthentication();

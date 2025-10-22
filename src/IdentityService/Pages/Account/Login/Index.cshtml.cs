@@ -1,10 +1,14 @@
+using Contracts;
+using Contracts.Constants;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
+using IdentityService.Data;
 using IdentityService.Models;
 using IdentityService.Pages.Login;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +27,8 @@ public class Index : PageModel
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore;
+    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ApplicationDbContext _dbContext;
 
     public ViewModel View { get; set; } = default!;
 
@@ -35,7 +41,9 @@ public class Index : PageModel
         IIdentityProviderStore identityProviderStore,
         IEventService events,
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        IPublishEndpoint publishEndpoint,
+        ApplicationDbContext dbContext)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -43,6 +51,8 @@ public class Index : PageModel
         _schemeProvider = schemeProvider;
         _identityProviderStore = identityProviderStore;
         _events = events;
+        _publishEndpoint = publishEndpoint;
+        _dbContext = dbContext;
     }
 
     public async Task<IActionResult> OnGet(string? returnUrl)
@@ -112,6 +122,14 @@ public class Index : PageModel
             {
                 await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
                 Telemetry.Metrics.UserLogin(context?.Client.ClientId, IdentityServerConstants.LocalIdentityProvider);
+
+                await _publishEndpoint.Publish(new UserLoggedIn
+                {
+                    Id = Guid.TryParse(user.Id, out var userId) ? userId : Guid.Empty,
+                    AnonymousId = Guid.TryParse(Request.Cookies[BasketConstants.CookieName], out var anonId) ? anonId : Guid.Empty
+                });
+
+                await _dbContext.SaveChangesAsync();
 
                 if (context != null)
                 {
