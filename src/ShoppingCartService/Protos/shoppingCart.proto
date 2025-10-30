@@ -2,7 +2,7 @@
 
 option csharp_namespace = "ShoppingCartService";
 
-service ShoppingCart {
+service GrpcShoppingCart {
 	rpc GetShoppingCart (GetShoppingCartRequest) returns (UserShoppingCartResponse) {}
 	rpc UpdateShoppingCart(UpdateShoppingCartRequest) returns (UserShoppingCartResponse) {}
 	rpc DeleteShoppingCart(DeleteShoppingCartRequest) returns (DeleteUserShoppingCartResponse) {}

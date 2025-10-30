@@ -7,7 +7,7 @@ using ShoppingCartService.Repositories;
 
 namespace ShoppingCartService.Services;
 
-public class GrpcShoppingCartService : ShoppingCart.ShoppingCartBase
+public class GrpcShoppingCartService : GrpcShoppingCart.GrpcShoppingCartBase
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly ILogger<GrpcShoppingCartService> _logger;

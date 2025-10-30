@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "ShoppingCartService";
+
+service GrpcShoppingCart {
+  rpc GetShoppingCart (GetShoppingCartRequest) returns (GetShoppingCartResponse) {}
+}
+
+message GetShoppingCartRequest {
+}
+
+message GetShoppingCartResponse {
+  repeated ShoppingCartItem items = 1;
+}
+
+message ShoppingCartItem {
+  string gameId = 1;
+  int32 quantity = 2;
+}
