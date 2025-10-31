@@ -1,5 +1,6 @@
-﻿namespace ShoppingCartService.Repositories;
-using ShoppingCartService.Entities;
+﻿using ShoppingCartService.Entities;
+
+namespace ShoppingCartService.Repositories;
 
 public interface IShoppingCartRepository
 {

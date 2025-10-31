@@ -1,6 +1,6 @@
 using Serilog;
+using ShoppingCartService.Endpoints;
 using ShoppingCartService.Extensions;
-using ShoppingCartService.Services;
 
 try
 {
@@ -12,8 +12,15 @@ try
 
     var app = builder.Build();
 
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseSerilogRequestLogging();
+
+    // app.UseExceptionHandler();
+
     // Configure the HTTP request pipeline.
-    app.MapGrpcService<GrpcShoppingCartService>();
+    app.MapShoppingCartApiEndpoints();
 
     app.Run();
 }

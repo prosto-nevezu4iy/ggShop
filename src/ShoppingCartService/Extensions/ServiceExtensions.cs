@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Serilog;
 using ShoppingCartService.Consumers;
 using ShoppingCartService.Repositories;
+using ShoppingCartService.Services;
 using StackExchange.Redis;
 
 namespace ShoppingCartService.Extensions;
@@ -22,6 +23,8 @@ public static class ServiceExtensions
         builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddSingleton<IShoppingCartRepository, RedisShoppingCartRepository>();
+
+        builder.Services.AddScoped<IShoppingCartService, Services.ShoppingCartService>();
 
         builder.Services.AddMassTransit(x =>
         {
