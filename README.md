@@ -46,7 +46,7 @@ The platform handles various aspects of an online store, such as product catalog
 ### 💳 Payment Service *(planned)*
 - Handles payments via external providers (Stripe)
 
-### ✉️ Notification Service
+### ✉️ Notification Service *(planned)*
 - Sends transactional emails (Brevo)
   - Registration confirmation
   - Password reset
