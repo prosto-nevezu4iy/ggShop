@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Infrastructure", "src\OrderService\OrderService.Infrastructure\OrderService.Infrastructure.csproj", "{01FED133-DCFE-4B01-AAA1-F6CEA6BF73E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "src\OrderService\OrderService\OrderService.csproj", "{5F1DF8EF-B80D-4F50-9B63-1924BCC81365}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Api", "src\OrderService\OrderService.Api\OrderService.Api.csproj", "{5F1DF8EF-B80D-4F50-9B63-1924BCC81365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

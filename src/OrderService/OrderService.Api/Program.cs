@@ -1,5 +1,5 @@
-using OrderService.Endpoints;
-using OrderService.Extensions;
+using OrderService.Api.Endpoints;
+using OrderService.Api.Extensions;
 using Serilog;
 
 try

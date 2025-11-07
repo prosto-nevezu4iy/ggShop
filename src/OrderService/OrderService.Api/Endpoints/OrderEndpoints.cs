@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using OrderService.Api.Extensions;
+using OrderService.Application.Commands.CancelOrder;
 using OrderService.Application.Commands.CreateOrder;
 using OrderService.Application.DTOs;
 using OrderService.Application.Interfaces;
 using OrderService.Application.Queries.GetOrderById;
 using OrderService.Application.Queries.GetOrdersByUser;
-using OrderService.Extensions;
 
-namespace OrderService.Endpoints;
+namespace OrderService.Api.Endpoints;
 
 public static class OrderEndpoints
 {
@@ -20,7 +21,7 @@ public static class OrderEndpoints
 
         api.MapPost("/", CreateOrderAsync);
 
-        // api.MapPut("/cancel", CancelOrderAsync);
+        api.MapPut("/{id:Guid}/cancel", CancelOrderAsync);
 
         return api;
     }
@@ -56,9 +57,28 @@ public static class OrderEndpoints
         ICommandHandler<CreateOrderCommand, OrderDto> handler,
         CancellationToken ct)
     {
-        var command = new CreateOrderCommand();
+        var token = context.GetToken();
+        var command = new CreateOrderCommand(token, context.GetUserIdentity());
         var order = await handler.Handle(command, ct);
 
         return TypedResults.Created($"/api/orders/{order.Id}", order);
+    }
+
+    private static async Task<Results<Ok, ProblemHttpResult>> CancelOrderAsync(
+        Guid id,
+        HttpContext context,
+        ICommandHandler<CancelOrderCommand, bool> handler,
+        CancellationToken ct)
+    {
+        var userId = context.GetUserIdentity();
+        var command = new CancelOrderCommand(id, userId);
+        var result = await handler.Handle(command, ct);
+
+        if (!result)
+        {
+            return TypedResults.Problem("Cancel order failed.");
+        }
+
+        return TypedResults.Ok();
     }
 }

@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Contracts\Contracts.csproj" />
       <ProjectReference Include="..\OrderService.Domain\OrderService.Domain.csproj" />
       <ProjectReference Include="..\OrderService.Infrastructure\OrderService.Infrastructure.csproj" />
     </ItemGroup>
@@ -14,15 +15,13 @@
     <ItemGroup>
       <PackageReference Include="Google.Protobuf" Version="3.33.0" />
       <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
-      <PackageReference Include="Grpc.Tools" Version="2.76.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
+      <PackageReference Include="Grpc.Tools" Version="2.76.0"/>
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
       <PackageReference Include="Scrutor" Version="6.1.0" />
     </ItemGroup>
 
     <ItemGroup>
         <Protobuf Include="Protos/shoppingCart.proto" GrpcServices="Client" />
+        <Protobuf Include="Protos/catalog.proto" GrpcServices="Client" />
     </ItemGroup>
-
 </Project>

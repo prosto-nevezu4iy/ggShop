@@ -3,33 +3,17 @@
 option csharp_namespace = "ShoppingCartService";
 
 service GrpcShoppingCart {
-	rpc GetShoppingCart (GetShoppingCartRequest) returns (UserShoppingCartResponse) {}
-	rpc UpdateShoppingCart(UpdateShoppingCartRequest) returns (UserShoppingCartResponse) {}
-	rpc DeleteShoppingCart(DeleteShoppingCartRequest) returns (DeleteUserShoppingCartResponse) {}
+	rpc GetShoppingCart (GetShoppingCartRequest) returns (GetShoppingCartResponse) {}
 }
 
 message GetShoppingCartRequest {
-
 }
 
-message UserShoppingCartResponse {
+message GetShoppingCartResponse {
 	repeated ShoppingCartItem items = 1;
 }
 
 message ShoppingCartItem {
 	string gameId = 1;
-	string name = 2;
-	double price = 3;
-	int32 quantity = 4;
-	string imageUrl = 5;
-}
-
-message UpdateShoppingCartRequest {
-    repeated ShoppingCartItem items = 1;
-}
-
-message DeleteShoppingCartRequest {
-}
-
-message DeleteUserShoppingCartResponse {
+	int32 quantity = 2;
 }

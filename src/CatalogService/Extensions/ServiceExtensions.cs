@@ -24,6 +24,8 @@ public static class ServiceExtensions
 
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddGrpc();
+
         builder.Services.AddSingleton<IValidateOptions<CloudinarySettings>, CloudinarySettingsValidation>();
         builder.Services.AddOptionsWithValidateOnStart<CloudinarySettings>()
             .Bind(builder.Configuration.GetRequiredSection(nameof(CloudinarySettings)));
@@ -37,6 +39,7 @@ public static class ServiceExtensions
 
         builder.Services.AddScoped<ICatalogService, Services.CatalogService>();
         builder.Services.AddScoped<IImageService, CloudinaryImageService>();
+
 
         var cloudinarySettings = builder.Configuration.GetRequiredSection(nameof(CloudinarySettings)).Get<CloudinarySettings>();
         builder.Services.AddSingleton(new Cloudinary(new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret)));

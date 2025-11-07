@@ -1,6 +1,7 @@
 ﻿using CatalogService.Endpoints;
 using CatalogService.Extensions;
 using CatalogService.Infrastructure;
+using CatalogService.Services;
 using Serilog;
 
 try
@@ -26,6 +27,7 @@ try
     await CatalogContextSeed.InitDb(app);
 
     app.MapCatalogApiEndpoints();
+    app.MapGrpcService<GrpcCatalogService>();
 
     app.Run();
 }

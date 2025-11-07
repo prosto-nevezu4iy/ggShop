@@ -1,3 +1,4 @@
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,7 @@ namespace OrderService.Application.Services;
 
 public class GrpcShoppingCartClient(IConfiguration config, ILogger<GrpcShoppingCartClient> logger)
 {
-    public async Task<ShoppingCart> GetShoppingCart()
+    public async Task<ShoppingCart> GetShoppingCartAsync(string token)
     {
         logger.LogInformation($"==> Calling GRPC Service: {config["GrpcShoppingCart"]}");
 
@@ -17,9 +18,14 @@ public class GrpcShoppingCartClient(IConfiguration config, ILogger<GrpcShoppingC
         var client = new GrpcShoppingCart.GrpcShoppingCartClient(channel);
         var request = new GetShoppingCartRequest();
 
+        var headers = new Metadata
+        {
+            { "Authorization", $"Bearer {token}" }
+        };
+
         try
         {
-            var reply = await client.GetShoppingCartAsync(request);
+            var reply = await client.GetShoppingCartAsync(request, headers);
 
             var shoppingCartItems = reply.Items.Select(item => new ShoppingCartItem
             {

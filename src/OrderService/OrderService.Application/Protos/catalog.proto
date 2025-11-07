@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option csharp_namespace = "CatalogService";
+
+service GrpcCatalog {
+  rpc GetGames (GetGamesRequest) returns (GetGamesResponse) {}
+}
+
+message GetGamesRequest {
+  repeated ShoppingCartItem items = 1;
+}
+
+message ShoppingCartItem {
+  string gameId = 1;
+}
+
+message GetGamesResponse {
+  repeated GameDto items = 1;
+}
+
+message GameDto {
+  string gameId = 1;
+  string name = 2;
+  double price = 3;
+  int32 quantity = 4;
+  int32 availableStock = 5;
+  string imageUrl = 6;
+}

@@ -16,7 +16,9 @@ public class GetOrdersByUserQueryHandler : IQueryHandler<GetOrdersByUserQuery, I
 
     public async Task<IEnumerable<OrderDto>> Handle(GetOrdersByUserQuery query, CancellationToken cancellationToken)
     {
-        var orders =  await _dbContext.Orders.Where(o => o.UserId == query.UserId).ToListAsync(cancellationToken: cancellationToken);
+        var orders =  await _dbContext.Orders
+            .Include(o => o.OrderItems)
+            .Where(o => o.UserId == query.UserId).ToListAsync(cancellationToken: cancellationToken);
 
         return orders.Select(order => new OrderDto
         {

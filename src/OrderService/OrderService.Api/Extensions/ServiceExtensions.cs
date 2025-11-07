@@ -5,7 +5,7 @@ using OrderService.Application.Services;
 using OrderService.Infrastructure;
 using Serilog;
 
-namespace OrderService.Extensions;
+namespace OrderService.Api.Extensions;
 
 public static class ServiceExtensions
 {
@@ -25,6 +25,7 @@ public static class ServiceExtensions
         builder.Services.AddApplicationServices();
 
         builder.Services.AddScoped<GrpcShoppingCartClient>();
+        builder.Services.AddScoped<GrpcCatalogClient>();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
