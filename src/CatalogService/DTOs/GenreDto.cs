@@ -1,7 +1,3 @@
 ﻿namespace CatalogService.DTOs;
 
-public record GenreDto
-{
-    public Guid Id { get; init; }
-    public string Name { get; init; }
-}
+public record GenreDto(Guid Id, string Name);

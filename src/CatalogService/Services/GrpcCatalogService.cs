@@ -1,4 +1,4 @@
-using CatalogService.Entities;
+using CatalogService.Extensions;
 using CatalogService.Infrastructure;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
@@ -26,30 +26,6 @@ public class GrpcCatalogService : GrpcCatalog.GrpcCatalogBase
             .Where(g => gameIds.Contains(g.Id))
             .ToListAsync();
 
-        if (games.Any())
-        {
-            return MapToGetGameResponse(games);
-        }
-
-        return new GetGamesResponse();
-    }
-
-    private static GetGamesResponse MapToGetGameResponse(IEnumerable<Game> games)
-    {
-        var response = new GetGamesResponse();
-
-        foreach (var item in games)
-        {
-            response.Items.Add(new GameItem
-            {
-                GameId = item.Id.ToString(),
-                Name = item.Name,
-                Price = (double)item.Price,
-                AvailableStock = item.AvailableStock,
-                ImageUrl = item.ImageUrl
-            });
-        }
-
-        return response;
+        return games is { Count: > 0 } ? games.ToGetGamesResponse() : new GetGamesResponse();
     }
 }

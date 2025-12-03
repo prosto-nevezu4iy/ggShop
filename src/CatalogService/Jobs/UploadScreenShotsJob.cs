@@ -1,18 +1,18 @@
-﻿using CatalogService.Services;
+﻿using CatalogService.Abstractions;
 using Quartz;
 
 namespace CatalogService.Jobs;
 
 public class UploadScreenShotsJob : IJob
 {
-    private readonly ICatalogService _catalogService;
+    private readonly IGameService _gameService;
     private readonly IImageService _imageService;
     private readonly ILogger<UploadScreenShotsJob> _logger;
 
-    public UploadScreenShotsJob(IImageService imageService, ICatalogService catalogService, ILogger<UploadScreenShotsJob> logger)
+    public UploadScreenShotsJob(IImageService imageService, IGameService gameService, ILogger<UploadScreenShotsJob> logger)
     {
         _imageService = imageService;
-        _catalogService = catalogService;
+        _gameService = gameService;
         _logger = logger;
     }
 
@@ -30,13 +30,16 @@ public class UploadScreenShotsJob : IJob
 
         try
         {
-            var game = await _catalogService.GetGameEntityByIdAsync(gameId);
+            var game = await _gameService.GetGameEntityByIdAsync(gameId);
 
-            if (game == null) return;
+            if (game is null)
+            {
+                return;
+            }
 
             var transformedScreenShotUrls = await _imageService.UploadScreenShots((IEnumerable<string>)dataMap["screenShotUrls"]);
 
-            await _catalogService.UpdateScreenShotUrlsAsync(game, transformedScreenShotUrls);
+            await _gameService.UpdateScreenShotUrlsAsync(game, transformedScreenShotUrls);
         }
         catch (Exception ex)
         {

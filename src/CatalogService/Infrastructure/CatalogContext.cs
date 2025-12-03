@@ -12,12 +12,15 @@ public class CatalogContext(DbContextOptions options) : DbContext(options)
     public DbSet<Publisher> Publishers { get; set; }
     public DbSet<Platform> Platforms { get; set; }
 
+    public DbSet<UserRating> UserRatings { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new GameEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new GenreEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new PlatformEntityTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new GenreEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new PublisherEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new UserRatingEntityTypeConfiguration());
 
         base.OnModelCreating(modelBuilder);
 

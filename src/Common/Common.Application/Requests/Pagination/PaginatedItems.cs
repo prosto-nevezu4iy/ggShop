@@ -1,4 +1,4 @@
-﻿namespace CatalogService.RequestHelpers;
+﻿namespace Common.Application.Requests.Pagination;
 
 public class PaginatedItems<TEntity>(int pageIndex, int pageSize, int totalCount, IEnumerable<TEntity> results) where TEntity : class
 {

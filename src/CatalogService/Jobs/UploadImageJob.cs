@@ -1,18 +1,18 @@
-﻿using CatalogService.Services;
+﻿using CatalogService.Abstractions;
 using Quartz;
 
 namespace CatalogService.Jobs;
 
 public class UploadImageJob : IJob
 {
-    private readonly ICatalogService _catalogService;
+    private readonly IGameService _gameService;
     private readonly IImageService _imageService;
     private readonly ILogger<UploadImageJob> _logger;
 
-    public UploadImageJob(IImageService imageService, ICatalogService catalogService, ILogger<UploadImageJob> logger)
+    public UploadImageJob(IImageService imageService, IGameService gameService, ILogger<UploadImageJob> logger)
     {
         _imageService = imageService;
-        _catalogService = catalogService;
+        _gameService = gameService;
         _logger = logger;
     }
 
@@ -30,13 +30,16 @@ public class UploadImageJob : IJob
 
         try
         {
-            var game = await _catalogService.GetGameEntityByIdAsync(gameId);
+            var game = await _gameService.GetGameEntityByIdAsync(gameId);
 
-            if (game == null) return;
+            if (game is null)
+            {
+                return;
+            }
 
             var uploadedUrl = await _imageService.UploadImage(dataMap.GetString("imageUrl"));
 
-            await _catalogService.UpdateImageUrlAsync(game, uploadedUrl);
+            await _gameService.UpdateImageUrlAsync(game, uploadedUrl);
         }
         catch (Exception ex)
         {

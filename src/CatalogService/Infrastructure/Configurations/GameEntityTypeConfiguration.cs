@@ -25,13 +25,16 @@ public class GameEntityTypeConfiguration : IEntityTypeConfiguration<Game>
             .HasMaxLength(4000);
 
         builder.Property(g => g.ImageUrl)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(2048);
 
         builder.Property(g => g.TrailerUrl)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(2048);
 
         builder.Property(g => g.BackgroundUrl)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(2048);
 
         builder.Property(g => g.ScreenShotUrls)
             .IsRequired();
@@ -53,5 +56,8 @@ public class GameEntityTypeConfiguration : IEntityTypeConfiguration<Game>
         builder.HasGeneratedTsVectorColumn(g => g.SearchVector, "english", g => new { g.Name, g.Description })
             .HasIndex(g => g.SearchVector)
             .HasMethod("GIN");
+
+        builder.Ignore(g => g.AverageUserRating);
+        builder.Ignore(g => g.TotalUserRatings);
     }
 }

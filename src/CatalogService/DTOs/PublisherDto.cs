@@ -1,7 +1,3 @@
 ﻿namespace CatalogService.DTOs;
 
-public record PublisherDto
-{
-    public Guid Id { get; init; }
-    public string Name { get; init; }
-}
+public record PublisherDto(Guid Id, string Name);

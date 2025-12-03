@@ -22,7 +22,7 @@ public class CatalogContextSeed
         if (!context.Genres.Any())
         {
             var sourcePath = Path.Combine(contentRootPath, "Setup", "genres.json");
-            var sourceJson = File.ReadAllText(sourcePath);
+            var sourceJson = await File.ReadAllTextAsync(sourcePath);
             var sourceItems = JsonSerializer.Deserialize<List<Genre>>(sourceJson);
 
             await context.Genres.AddRangeAsync(sourceItems);
@@ -33,7 +33,7 @@ public class CatalogContextSeed
         if (!context.Publishers.Any())
         {
             var sourcePath = Path.Combine(contentRootPath, "Setup", "publishers.json");
-            var sourceJson = File.ReadAllText(sourcePath);
+            var sourceJson = await File.ReadAllTextAsync(sourcePath);
             var sourceItems = JsonSerializer.Deserialize<List<Publisher>>(sourceJson);
 
             await context.Publishers.AddRangeAsync(sourceItems);
@@ -44,7 +44,7 @@ public class CatalogContextSeed
         if (!context.Platforms.Any())
         {
             var sourcePath = Path.Combine(contentRootPath, "Setup", "platforms.json");
-            var sourceJson = File.ReadAllText(sourcePath);
+            var sourceJson = await File.ReadAllTextAsync(sourcePath);
             var sourceItems = JsonSerializer.Deserialize<List<Platform>>(sourceJson);
 
             await context.Platforms.AddRangeAsync(sourceItems);
@@ -55,7 +55,7 @@ public class CatalogContextSeed
         if (!context.Games.Any())
         {
             var sourcePath = Path.Combine(contentRootPath, "Setup", "games.json");
-            var sourceJson = File.ReadAllText(sourcePath);
+            var sourceJson = await File.ReadAllTextAsync(sourcePath);
             var sourceItems = JsonSerializer.Deserialize<List<Game>>(sourceJson);
 
             var games = sourceItems.Select(s => new Game
@@ -68,7 +68,7 @@ public class CatalogContextSeed
                 Price = s.Price,
                 Discount = s.Discount,
                 AvailableStock = s.AvailableStock,
-                Platforms = context.Platforms.ToList().Where(pf => s.Platforms.Any(x => x.Name == pf.Name)).ToList(),
+                Platforms = context.Platforms.Where(pf => s.Platforms.Any(x => x.Name == pf.Name)).ToList(),
                 Publisher = context.Publishers.FirstOrDefault(x => x.Name == s.Publisher.Name),
                 ReleaseDate = s.ReleaseDate,
                 Rating = s.Rating,
@@ -76,7 +76,7 @@ public class CatalogContextSeed
                 TrailerUrl = s.TrailerUrl,
                 BackgroundUrl = s.BackgroundUrl,
                 ScreenShotUrls = s.ScreenShotUrls,
-                Genres = context.Genres.ToList().Where(gn => s.Genres.Any(x => x.Name == gn.Name)).ToList(),
+                Genres = context.Genres.Where(gn => s.Genres.Any(x => x.Name == gn.Name)).ToList()
             }).ToList();
 
             await context.Games.AddRangeAsync(games);

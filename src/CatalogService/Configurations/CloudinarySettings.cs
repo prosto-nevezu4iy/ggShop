@@ -1,8 +1,15 @@
-﻿namespace CatalogService.Configurations;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record CloudinarySettings(string CloudName, string ApiKey, string ApiSecret)
+namespace CatalogService.Configurations;
+
+public sealed class CloudinarySettings
 {
-    public CloudinarySettings() : this(string.Empty, string.Empty, string.Empty)
-    {
-    }
+    [Required]
+    public string CloudName { get; init; }
+
+    [Required]
+    public string ApiKey { get; init; }
+
+    [Required]
+    public string ApiSecret { get; init; }
 }

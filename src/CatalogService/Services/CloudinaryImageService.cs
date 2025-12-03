@@ -1,26 +1,30 @@
-﻿using CatalogService.Jobs;
+﻿using CatalogService.Abstractions;
+using CatalogService.Configurations;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Quartz;
+using Microsoft.Extensions.Options;
+using static CatalogService.Constants.GameConstants;
 
 namespace CatalogService.Services;
 
 public class CloudinaryImageService : IImageService
 {
+    private readonly CloudinarySettings _cloudinarySettings;
     private readonly Cloudinary _cloudinary;
-    private readonly ISchedulerFactory _schedulerFactory;
 
-    public CloudinaryImageService(Cloudinary cloudinary, ISchedulerFactory schedulerFactory)
+    public CloudinaryImageService(IOptions<CloudinarySettings> cloudinarySettings)
     {
-        _cloudinary = cloudinary;
-        _schedulerFactory = schedulerFactory;
+        _cloudinarySettings = cloudinarySettings.Value;
+
+        _cloudinary = new Cloudinary(new Account(_cloudinarySettings.CloudName, _cloudinarySettings.ApiKey, _cloudinarySettings.ApiSecret));
     }
+
     public async Task<string> UploadImage(string filePath)
     {
-        var uploadParams = new ImageUploadParams()
+        var uploadParams = new ImageUploadParams
         {
             File = new FileDescription(filePath),
-            Folder = "games",
+            Folder = FolderName,
             Transformation = new Transformation()
                 .Width(300)
                 .Crop("fill")
@@ -32,10 +36,10 @@ public class CloudinaryImageService : IImageService
 
     public async Task<string> UploadScreenShot(string filePath)
     {
-        var uploadParams = new ImageUploadParams()
+        var uploadParams = new ImageUploadParams
         {
             File = new FileDescription(filePath),
-            Folder = "games",
+            Folder = FolderName,
             Transformation = new Transformation()
                 .Width(1048)
                 .Height(590)
@@ -52,90 +56,8 @@ public class CloudinaryImageService : IImageService
         return await Task.WhenAll(uploadTasks);
     }
 
-    public async Task UploadImageJob(Guid createdGameId, string imageUrl)
-    {
-        IJobDetail job = JobBuilder.Create<UploadImageJob>()
-            .WithIdentity($"imageJob_{createdGameId}")
-            .UsingJobData("gameId", createdGameId)
-            .UsingJobData("imageUrl", imageUrl)
-        .Build();
-
-        ITrigger trigger = TriggerBuilder.Create()
-            .WithIdentity($"imageTrigger_{createdGameId}")
-            .StartNow()
-        .Build();
-
-        var scheduler = await _schedulerFactory.GetScheduler();
-
-        await scheduler.ScheduleJob(job, trigger);
-    }
-
-    public async Task UploadScreenShotsJob(Guid gameId, IEnumerable<string> screenShotUrls)
-    {
-        var jobDataMap = new JobDataMap
-        {
-            { "screenShotUrls", screenShotUrls }
-        };
-
-        IJobDetail job = JobBuilder.Create<UploadScreenShotsJob>()
-            .WithIdentity($"screenShotsJob_{gameId}")
-            .UsingJobData("gameId", gameId)
-            .UsingJobData(jobDataMap)
-        .Build();
-
-        ITrigger trigger = TriggerBuilder.Create()
-            .WithIdentity($"screenShotsTrigger_{gameId}")
-            .StartNow()
-        .Build();
-
-        var scheduler = await _schedulerFactory.GetScheduler();
-
-        await scheduler.ScheduleJob(job, trigger);
-    }
-
-    public async Task DeleteScreenShotsJob(Guid gameId, IEnumerable<string> screenShotUrls)
-    {
-        var jobDataMap = new JobDataMap
-        {
-            { "screenShotUrls", screenShotUrls.ToArray() }
-        };
-
-        IJobDetail job = JobBuilder.Create<DeleteScreenShotsJob>()
-            .WithIdentity($"deleteScreenShotsJob_{gameId}")
-            .UsingJobData("gameId", gameId)
-            .UsingJobData(jobDataMap)
-        .Build();
-
-        ITrigger trigger = TriggerBuilder.Create()
-            .WithIdentity($"deleteScreenShotsTrigger_{gameId}")
-            .StartNow()
-        .Build();
-
-        var scheduler = await _schedulerFactory.GetScheduler();
-
-        await scheduler.ScheduleJob(job, trigger);
-    }
-
     public async Task DeleteImages(params string[] publicIds)
     {
         await _cloudinary.DeleteResourcesAsync(ResourceType.Image, publicIds);
-    }
-
-    public async Task DeleteImageJob(Guid gameId, string imageUrl)
-    {
-        IJobDetail job = JobBuilder.Create<DeleteImageJob>()
-           .WithIdentity($"deleteImageJob_{gameId}")
-           .UsingJobData("gameId", gameId)
-           .UsingJobData("imageUrl", imageUrl)
-       .Build();
-
-        ITrigger trigger = TriggerBuilder.Create()
-            .WithIdentity($"deleteImageTrigger_{gameId}")
-            .StartNow()
-        .Build();
-
-        var scheduler = await _schedulerFactory.GetScheduler();
-
-        await scheduler.ScheduleJob(job, trigger);
     }
 }

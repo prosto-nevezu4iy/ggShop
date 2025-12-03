@@ -21,12 +21,10 @@ try
 
     app.UseExceptionHandler();
 
-    //app.UseStatusCodePages();
-
     // Configure the HTTP request pipeline.
     await CatalogContextSeed.InitDb(app);
 
-    app.MapCatalogApiEndpoints();
+    app.MapGamesApiEndpoints();
     app.MapGrpcService<GrpcCatalogService>();
 
     app.Run();
@@ -39,4 +37,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-

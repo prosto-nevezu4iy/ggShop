@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace CatalogService.Middlewares;
+namespace Common.Presentation.Middlewares;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
@@ -20,8 +22,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         var problemDetails = new ProblemDetails
         {
             Status = StatusCodes.Status500InternalServerError,
-            Title = "Server error",
-            Detail = exception.Message
+            Title = "Server error"
         };
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;

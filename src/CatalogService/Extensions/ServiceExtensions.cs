@@ -1,14 +1,15 @@
-﻿using CatalogService.Configurations;
+﻿using CatalogService.Abstractions;
+using CatalogService.Configurations;
+using CatalogService.Entities;
 using CatalogService.Infrastructure;
-using CatalogService.Middlewares;
+using CatalogService.RequestHelpers;
 using CatalogService.Services;
 using CatalogService.Validators;
-using CloudinaryDotNet;
+using Common.Presentation.Middlewares;
 using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Quartz;
 using Serilog;
 
@@ -24,25 +25,18 @@ public static class ServiceExtensions
 
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddGrpc();
-
-        builder.Services.AddSingleton<IValidateOptions<CloudinarySettings>, CloudinarySettingsValidation>();
-        builder.Services.AddOptionsWithValidateOnStart<CloudinarySettings>()
-            .Bind(builder.Configuration.GetRequiredSection(nameof(CloudinarySettings)));
+        builder.Services
+            .AddOptions<CloudinarySettings>()
+            .BindConfiguration(nameof(CloudinarySettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
         builder.Services.AddDbContext<CatalogContext>(opt =>
         {
             opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-        builder.Services.AddScoped<ICatalogService, Services.CatalogService>();
-        builder.Services.AddScoped<IImageService, CloudinaryImageService>();
-
-
-        var cloudinarySettings = builder.Configuration.GetRequiredSection(nameof(CloudinarySettings)).Get<CloudinarySettings>();
-        builder.Services.AddSingleton(new Cloudinary(new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret)));
+        AddCatalogServices(builder);
 
         builder.Services.AddValidatorsFromAssemblyContaining<CreateGameDtoValidator>();
 
@@ -71,15 +65,29 @@ public static class ServiceExtensions
             });
         });
 
+        builder.Services.AddGrpc();
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Authority = builder.Configuration["IdentityServiceUrl"];
+                options.Authority = builder.Configuration.GetValue<string>("IdentityServiceUrl");
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters.ValidateAudience = false;
                 options.TokenValidationParameters.NameClaimType = "username";
             });
 
         builder.Services.AddAuthorization();
+    }
+
+    private static void AddCatalogServices(IHostApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<ISearchBuilder<Game>, GameSearchBuilder>();
+        builder.Services.AddScoped<FilterBuilder<Game, GamePagedFilterRequest>, GameFilterBuilder>();
+        builder.Services.AddScoped<IOrderBuilder<Game>, GameOrderBuilder>();
+
+        builder.Services.AddScoped<IGameService, Services.GameService>();
+        builder.Services.AddScoped<IImageService, CloudinaryImageService>();
+        builder.Services.AddScoped<IJobService, JobService>();
+        builder.Services.AddScoped<IUserRatingService, UserRatingService>();
     }
 }

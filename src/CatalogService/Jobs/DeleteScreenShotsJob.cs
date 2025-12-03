@@ -1,4 +1,4 @@
-﻿using CatalogService.Services;
+﻿using CatalogService.Abstractions;
 using Quartz;
 
 namespace CatalogService.Jobs;

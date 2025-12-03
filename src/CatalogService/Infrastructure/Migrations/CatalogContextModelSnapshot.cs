@@ -29,20 +29,21 @@ namespace CatalogService.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("AvailableStock")
-                        .HasColumnType("integer");
+                    b.Property<long>("AvailableStock")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("BackgroundUrl")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<int>("Discount")
-                        .HasColumnType("integer");
+                    b.Property<byte>("Discount")
+                        .HasColumnType("smallint");
 
                     b.Property<decimal>("DiscountPrice")
                         .ValueGeneratedOnAddOrUpdate()
@@ -56,7 +57,8 @@ namespace CatalogService.Infrastructure.Migrations
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
                     b.Property<bool>("IsPreOrder")
                         .HasColumnType("boolean");
@@ -72,8 +74,8 @@ namespace CatalogService.Infrastructure.Migrations
                     b.Property<Guid>("PublisherId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("integer");
+                    b.Property<byte>("Rating")
+                        .HasColumnType("smallint");
 
                     b.Property<DateOnly>("ReleaseDate")
                         .HasColumnType("date");
@@ -96,7 +98,8 @@ namespace CatalogService.Infrastructure.Migrations
 
                     b.Property<string>("TrailerUrl")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
                     b.HasKey("Id");
 
@@ -138,7 +141,7 @@ namespace CatalogService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Platforms", (string)null);
+                    b.ToTable("Platforms");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Publisher", b =>
@@ -148,11 +151,36 @@ namespace CatalogService.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Publishers");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.UserRating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte>("Rating")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserRatings");
                 });
 
             modelBuilder.Entity("GamesGenres", b =>
@@ -364,6 +392,17 @@ namespace CatalogService.Infrastructure.Migrations
                     b.Navigation("Publisher");
                 });
 
+            modelBuilder.Entity("CatalogService.Entities.UserRating", b =>
+                {
+                    b.HasOne("CatalogService.Entities.Game", "Game")
+                        .WithMany("UserRatings")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("GamesGenres", b =>
                 {
                     b.HasOne("CatalogService.Entities.Game", null)
@@ -404,6 +443,11 @@ namespace CatalogService.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("InboxMessageId", "InboxConsumerId")
                         .HasPrincipalKey("MessageId", "ConsumerId");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.Game", b =>
+                {
+                    b.Navigation("UserRatings");
                 });
 #pragma warning restore 612, 618
         }

@@ -27,7 +27,7 @@ public class CreateGameDtoValidator : AbstractValidator<CreateGameDto>
             .InclusiveBetween(1, 100);
 
         RuleFor(x => x.Discount)
-            .InclusiveBetween(1, 100);
+            .InclusiveBetween<CreateGameDto, byte>(1, 100);
 
         RuleFor(x => x.Platforms)
             .NotEmpty();
@@ -36,7 +36,7 @@ public class CreateGameDtoValidator : AbstractValidator<CreateGameDto>
             .NotEmpty();
 
         RuleFor(x => x.Rating)
-            .InclusiveBetween(1, 100);
+            .InclusiveBetween<CreateGameDto, byte>(1, 100);
 
         RuleFor(x => x.ImageUrl)
             .NotEmpty();
