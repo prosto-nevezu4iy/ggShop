@@ -28,8 +28,5 @@ where TRequest : IFilterRequest
 
     public abstract FilterBuilder<TEntity, TRequest> ApplyFilters(TRequest request);
 
-    public IQueryable<TEntity> Build()
-    {
-        return _query;
-    }
+    public IQueryable<TEntity> Build() => _query;
 }

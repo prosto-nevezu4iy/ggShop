@@ -43,10 +43,10 @@ public static class GameEndpoints
         return app;
     }
 
-    static async Task<Ok<PaginatedItems<GameDto>>> GetGames([AsParameters] GamePagedFilterRequest request, IGameService gameService)
-    {
-        return TypedResults.Ok(await gameService.GetGamesAsync(request));
-    }
+    private static async Task<Ok<PaginatedItems<GameDto>>> GetGames(
+        [AsParameters] GamePagedFilterRequest request,
+        IGameService gameService) =>
+        TypedResults.Ok(await gameService.GetGamesAsync(request));
 
     static async Task<Results<Ok<GameDto>, ProblemHttpResult>> GetGameById(Guid id, IGameService gameService)
     {

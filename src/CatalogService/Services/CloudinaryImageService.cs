@@ -56,8 +56,7 @@ public class CloudinaryImageService : IImageService
         return await Task.WhenAll(uploadTasks);
     }
 
-    public async Task DeleteImages(params string[] publicIds)
-    {
+    public async Task DeleteImages(
+        params string[] publicIds) =>
         await _cloudinary.DeleteResourcesAsync(ResourceType.Image, publicIds);
-    }
 }

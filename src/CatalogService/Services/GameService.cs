@@ -89,11 +89,9 @@ public class GameService : IGameService
             : game.ToDto();
     }
 
-    public async Task<Game> GetGameEntityByIdAsync(Guid id)
-    {
-        return await _dbContext.Games
+    public async Task<Game> GetGameEntityByIdAsync(Guid id) =>
+        await _dbContext.Games
             .SingleOrDefaultAsync(x => x.Id == id);
-    }
 
     public async Task<Result<GameDto>> CreateGameAsync(CreateGameDto createGameDto)
     {
