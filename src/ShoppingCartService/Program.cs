@@ -18,7 +18,7 @@ try
 
     app.UseSerilogRequestLogging();
 
-    // app.UseExceptionHandler();
+    app.UseExceptionHandler();
 
     // Configure the HTTP request pipeline.
     app.MapShoppingCartApiEndpoints();

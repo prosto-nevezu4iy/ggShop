@@ -1,5 +1,5 @@
+using Common.Application.Constants;
 using Contracts;
-using Contracts.Constants;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static Common.Application.Constants.IdentityConstants;
 
 namespace IdentityService.Pages.Account.Login;
 
@@ -126,7 +127,7 @@ public class Index : PageModel
                 await _publishEndpoint.Publish(new UserLoggedIn
                 {
                     Id = Guid.TryParse(user.Id, out var userId) ? userId : Guid.Empty,
-                    AnonymousId = Guid.TryParse(Request.Cookies[BasketConstants.CookieName], out var anonId) ? anonId : Guid.Empty
+                    AnonymousId = Guid.TryParse(Request.Cookies[CookieName], out var anonId) ? anonId : Guid.Empty
                 });
 
                 await _dbContext.SaveChangesAsync();

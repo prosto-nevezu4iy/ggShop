@@ -4,6 +4,8 @@ namespace CatalogService.Configurations;
 
 public sealed class CloudinarySettings
 {
+    public const string Section = "Cloudinary";
+
     [Required]
     public string CloudName { get; init; }
 

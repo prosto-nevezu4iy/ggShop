@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using CatalogService.Abstractions;
 using CatalogService.Entities;
 using CatalogService.Enums;

@@ -107,8 +107,7 @@ public static class GameEndpoints
         IUserRatingService userRatingService,
         LinkGenerator linkGenerator)
     {
-        var userId = httpContext.GetUserIdentity();
-        var result = await userRatingService.AddUserRatingAsync(id, userId, createUserRatingDto);
+        var result = await userRatingService.AddUserRatingAsync(id, httpContext.GetUserIdentity(), createUserRatingDto);
 
         return result.Match(
             value => TypedResults.Created(
@@ -124,8 +123,7 @@ public static class GameEndpoints
         UpdateUserRatingDto updateUserRatingDto,
         IUserRatingService userRatingService)
     {
-        var userId = user.GetUserIdentity();
-        var result = await userRatingService.UpdateUserRatingAsync(id, userId, updateUserRatingDto);
+        var result = await userRatingService.UpdateUserRatingAsync(id, user.GetUserIdentity(), updateUserRatingDto);
 
         return result.Match(
             () => TypedResults.NoContent(),
@@ -139,8 +137,7 @@ public static class GameEndpoints
         ClaimsPrincipal user,
         IUserRatingService userRatingService)
     {
-        var userId = user.GetUserIdentity();
-        var result = await userRatingService.DeleteUserRatingAsync(id, userId);
+        var result = await userRatingService.DeleteUserRatingAsync(id, user.GetUserIdentity());
 
         return result.Match(
             () => TypedResults.NoContent(),

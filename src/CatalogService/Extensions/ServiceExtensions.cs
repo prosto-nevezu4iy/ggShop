@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
 using Serilog;
+using static Common.Application.Constants.DatabaseConstants;
+using static Common.Application.Constants.IdentityConstants;
 
 namespace CatalogService.Extensions;
 
@@ -27,13 +29,13 @@ public static class ServiceExtensions
     {
         builder.Services
             .AddOptions<CloudinarySettings>()
-            .BindConfiguration(nameof(CloudinarySettings))
+            .BindConfiguration(CloudinarySettings.Section)
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
         builder.Services.AddDbContext<CatalogContext>(opt =>
         {
-            opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            opt.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnection));
         });
 
         AddCatalogServices(builder);
@@ -70,10 +72,10 @@ public static class ServiceExtensions
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Authority = builder.Configuration.GetValue<string>("IdentityServiceUrl");
+                options.Authority = builder.Configuration.GetValue<string>(IdentityServiceUrl);
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters.ValidateAudience = false;
-                options.TokenValidationParameters.NameClaimType = "username";
+                options.TokenValidationParameters.NameClaimType = IdentityUserName;
             });
 
         builder.Services.AddAuthorization();
@@ -85,7 +87,7 @@ public static class ServiceExtensions
         builder.Services.AddScoped<FilterBuilder<Game, GamePagedFilterRequest>, GameFilterBuilder>();
         builder.Services.AddScoped<IOrderBuilder<Game>, GameOrderBuilder>();
 
-        builder.Services.AddScoped<IGameService, Services.GameService>();
+        builder.Services.AddScoped<IGameService, GameService>();
         builder.Services.AddScoped<IImageService, CloudinaryImageService>();
         builder.Services.AddScoped<IJobService, JobService>();
         builder.Services.AddScoped<IUserRatingService, UserRatingService>();

@@ -1,8 +1,10 @@
-using Contracts.Constants;
+using Common.Domain;
+using Microsoft.Extensions.Options;
+using ShoppingCartService.Abstractions;
+using ShoppingCartService.Configurations;
 using ShoppingCartService.DTOs;
-using ShoppingCartService.Entities;
+using ShoppingCartService.Errors;
 using ShoppingCartService.Extensions;
-using ShoppingCartService.Repositories;
 
 namespace ShoppingCartService.Services;
 
@@ -10,128 +12,71 @@ public class ShoppingCartService : IShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly ILogger<ShoppingCartService> _logger;
+    private readonly ShoppingCartSettings _shoppingCartSettings;
 
-    public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, ILogger<ShoppingCartService> logger)
+    public ShoppingCartService(
+        IShoppingCartRepository shoppingCartRepository,
+        ILogger<ShoppingCartService> logger,
+        IOptions<ShoppingCartSettings> options)
     {
         _shoppingCartRepository = shoppingCartRepository;
         _logger = logger;
+        _shoppingCartSettings = options.Value;
     }
 
-    public async Task<ShoppingCartResponse> GetShoppingCartAsync(HttpContext httpContext)
+    public async Task<ShoppingCartDto> GetShoppingCartAsync(Guid userId)
     {
-        // Get user from identity
-        var userId = GetUserId(httpContext);
-        if (string.IsNullOrEmpty(userId))
-        {
-            return new();
-        }
-
         _logger.LogDebug("Begin GetShoppingCart call from method {Method} for basket id {Id}", nameof(GetShoppingCartAsync), userId);
 
-        var data = await _shoppingCartRepository.GetBasketAsync(userId);
+        var data = await _shoppingCartRepository.GetShoppingCartAsync(userId);
 
-        if (data is not null)
-        {
-            return data.ToShoppingCartResponse();
-        }
-
-        return new();
+        return data.ToDto();
     }
 
-    public async Task<ShoppingCartResponse> AddItemToCartAsync(AddCartItemRequest request, HttpContext httpContext)
+    public async Task<Result<ShoppingCartDto>> AddItemToShoppingCartAsync(Guid userId, CreateShoppingCartItemDto dto)
     {
-        var userId = GetUserId(httpContext);
-        if (string.IsNullOrEmpty(userId))
+        var cart = await _shoppingCartRepository.GetShoppingCartAsync(userId);
+        if (cart is null)
         {
-            throw new UnauthorizedAccessException("User not authenticated");
+            return ShoppingCartErrors.NotFound(userId);
         }
 
-        var cart = await _shoppingCartRepository.GetBasketAsync(userId) ?? new UserShoppingCart { UserId = userId };
+        var result = cart.AddItem(dto.GameId, dto.Name, dto.Price, dto.ImageUrl, _shoppingCartSettings);
 
-        var existingItem = cart.Items.FirstOrDefault(i => i.GameId == request.GameId);
-        if (existingItem != null)
+        if (result.IsFailure)
         {
-            existingItem.Quantity += request.Quantity; // if exists, increase quantity
-        }
-        else
-        {
-            cart.Items.Add(new Entities.ShoppingCartItem
-            {
-                GameId = request.GameId,
-                Name = request.Name,
-                Price = request.Price,
-                Quantity = request.Quantity,
-                ImageUrl = request.ImageUrl
-            });
+            return result.Error;
         }
 
-        var response = await _shoppingCartRepository.UpdateBasketAsync(cart);
+        var response = await _shoppingCartRepository.UpdateShoppingCartAsync(cart);
 
-        return response.ToShoppingCartResponse();
+        return response is null ? ShoppingCartErrors.ShoppingCartNotUpdated : response.ToDto();
     }
 
-    public async Task<ShoppingCartResponse> UpdateItemQuantityAsync(Guid gameId, HttpContext httpContext)
+    public async Task<Result<ShoppingCartDto>> UpdateQuantityAsync(Guid userId, Guid gameId, UpdateShoppingCartItemDto dto)
     {
-        var userId = GetUserId(httpContext);
-        if (string.IsNullOrEmpty(userId))
+        var cart = await _shoppingCartRepository.GetShoppingCartAsync(userId);
+        if (cart is null)
         {
-            throw new UnauthorizedAccessException("User not authenticated");
+            return ShoppingCartErrors.NotFound(userId);
         }
 
-        var cart = await _shoppingCartRepository.GetBasketAsync(userId);
-        if (cart == null)
+        var result = cart.UpdateItemQuantity(gameId, dto.Quantity, _shoppingCartSettings);
+
+        if (result.IsFailure)
         {
-            throw new KeyNotFoundException("Shopping cart not found");
+            return result.Error;
         }
 
-        var item = cart.Items.FirstOrDefault(i => i.GameId == gameId);
-        if (item == null)
-        {
-            throw new KeyNotFoundException("Item not found in cart");
-        }
+        var updatedCart = await _shoppingCartRepository.UpdateShoppingCartAsync(cart);
 
-        item.Quantity += 1;
-
-        var updatedCart = await _shoppingCartRepository.UpdateBasketAsync(cart);
-
-        return updatedCart.ToShoppingCartResponse();
+        return updatedCart is null ? ShoppingCartErrors.ShoppingCartNotUpdated : updatedCart.ToDto();
     }
 
-    public async Task DeleteShoppingCartAsync(HttpContext httpContext)
+    public async Task<Result> DeleteShoppingCartAsync(Guid userId)
     {
-        var userId = GetUserId(httpContext);
-        if (string.IsNullOrEmpty(userId))
-        {
-            _logger.LogError("User does not exist");
-            throw new UnauthorizedAccessException("The caller is not authenticated.");
-        }
+        var result = await _shoppingCartRepository.DeleteShoppingCartAsync(userId);
 
-        await _shoppingCartRepository.DeleteBasketAsync(userId);
-    }
-
-    private static string GetUserId(HttpContext context)
-    {
-        var userIdentity = context.User.Identity;
-
-        if (userIdentity is { IsAuthenticated: true })
-        {
-            return context.GetUserIdentity();
-        }
-
-        if (context.Request.Cookies.ContainsKey(BasketConstants.CookieName))
-        {
-            return context.Request.Cookies[BasketConstants.CookieName];
-        }
-
-        var userId = Guid.NewGuid().ToString();
-        var cookieOptions = new CookieOptions
-        {
-            IsEssential = true,
-            Expires = DateTime.Today.AddMonths(1)
-        };
-
-        context.Response.Cookies.Append(BasketConstants.CookieName, userId, cookieOptions);
-
-        return userId;
+        return result ? Result.Success() : ShoppingCartErrors.ShoppingCartNotDeleted;
     }
 }

@@ -1,6 +1,6 @@
 using Contracts;
 using MassTransit;
-using ShoppingCartService.Repositories;
+using ShoppingCartService.Abstractions;
 
 namespace ShoppingCartService.Consumers;
 
@@ -21,7 +21,7 @@ public class GameDeletedConsumer : IConsumer<GameDeleted>
         {
             _logger.LogInformation("--> Consuming GameDeleted event: {Id}", context.Message.Id);
 
-            await _shoppingCartRepository.DeleteBasketsByGameIdAsync(context.Message.Id);
+            await _shoppingCartRepository.DeleteShoppingCartsByGameIdAsync(context.Message.Id);
         }
         catch (Exception ex)
         {

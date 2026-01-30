@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	  <UserSecretsId>6993565e-937c-4eaa-9154-341bd706417e</UserSecretsId>
@@ -13,16 +13,17 @@
 		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.3.2" />
 		<PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.4.0" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
 
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.11" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.11" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Common\Common.Application\Common.Application.csproj" />
 	  <ProjectReference Include="..\Contracts\Contracts.csproj" />
 	</ItemGroup>
 </Project>

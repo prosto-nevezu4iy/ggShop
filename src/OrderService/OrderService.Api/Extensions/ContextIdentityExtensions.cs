@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Contracts.Constants;
 
 namespace OrderService.Api.Extensions;
 
