@@ -1,13 +1,12 @@
-using Common.Application.Constants;
 using Contracts;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
+using IdentityService.Constants;
 using IdentityService.Data;
 using IdentityService.Models;
-using IdentityService.Pages.Login;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -31,10 +30,10 @@ public class Index : PageModel
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly ApplicationDbContext _dbContext;
 
-    public ViewModel View { get; set; } = default!;
+    public ViewModel View { get; set; }
 
     [BindProperty]
-    public InputModel Input { get; set; } = default!;
+    public InputModel Input { get; set; }
 
     public Index(
         IIdentityServerInteractionService interaction,
@@ -56,14 +55,14 @@ public class Index : PageModel
         _dbContext = dbContext;
     }
 
-    public async Task<IActionResult> OnGet(string? returnUrl)
+    public async Task<IActionResult> OnGet(string returnUrl)
     {
         await BuildModelAsync(returnUrl);
 
         if (View.IsExternalLoginOnly)
         {
             // we only have one option for logging in and it's an external provider
-            return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, returnUrl });
+            return RedirectToPage(PageRoutes.ExternalLogin, new { scheme = View.ExternalLoginScheme, returnUrl });
         }
 
         return Page();
@@ -175,7 +174,7 @@ public class Index : PageModel
         return Page();
     }
 
-    private async Task BuildModelAsync(string? returnUrl)
+    private async Task BuildModelAsync(string returnUrl)
     {
         Input = new InputModel
         {

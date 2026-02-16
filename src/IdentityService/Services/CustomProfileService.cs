@@ -5,6 +5,7 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Identity;
+using static IdentityService.Constants.IdentityConstants;
 
 namespace IdentityService.Services;
 
@@ -41,13 +42,13 @@ public class CustomProfileService(UserManager<ApplicationUser> userManager) : IP
 
         if (!string.IsNullOrEmpty(user.AvatarUrl))
         {
-            claims.Add(new Claim("avatar_url", user.AvatarUrl));
+            claims.Add(new Claim(AvatarUrlClaimType, user.AvatarUrl));
         }
 
         context.IssuedClaims.AddRange(claims);
 
         var nameClaim = existingClaims.FirstOrDefault(x => x.Type == JwtClaimTypes.Name);
-        if (nameClaim != null)
+        if (nameClaim is not null)
         {
             context.IssuedClaims.Add(nameClaim);
         }

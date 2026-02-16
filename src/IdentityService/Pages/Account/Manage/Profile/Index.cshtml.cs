@@ -4,6 +4,8 @@ using IdentityService.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static IdentityService.Constants.ErrorMessages;
+using static IdentityService.Constants.SuccessMessages;
 
 namespace IdentityService.Pages.Account.Manage.Profile;
 
@@ -14,9 +16,9 @@ public class Index(UserManager<ApplicationUser> userManager, SignInManager<Appli
     public async Task<IActionResult> OnGetAsync()
     {
         var user = await userManager.GetUserAsync(User);
-        if (user == null)
+        if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(UserNotFoundWithId, userManager.GetUserId(User)));
         }
 
         LoadAsync(user);
@@ -26,9 +28,9 @@ public class Index(UserManager<ApplicationUser> userManager, SignInManager<Appli
     public  async Task<IActionResult> OnPostAsync()
     {
         var user = await userManager.GetUserAsync(User);
-        if (user == null)
+        if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(UserNotFoundWithId, userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -53,7 +55,7 @@ public class Index(UserManager<ApplicationUser> userManager, SignInManager<Appli
 
         await signInManager.RefreshSignInAsync(user);
 
-        Input.StatusMessage = "Your profile has been updated";
+        Input.StatusMessage = ProfileHasBeenUpdated;
 
         return Page();
     }
@@ -74,12 +76,18 @@ public class Index(UserManager<ApplicationUser> userManager, SignInManager<Appli
     private async Task ReplaceClaimAsync(ApplicationUser user, IEnumerable<Claim> existingClaims, string type, string value)
     {
         if (string.IsNullOrWhiteSpace(value))
+        {
             return; // Skip empty values — don't add or remove anything
+        }
 
         var oldClaim = existingClaims.FirstOrDefault(c => c.Type == type);
-        if (oldClaim != null)
+        if (oldClaim is not null)
+        {
             await userManager.ReplaceClaimAsync(user, oldClaim, new Claim(type, value));
+        }
         else
+        {
             await userManager.AddClaimAsync(user, new Claim(type, value));
+        }
     }
 }

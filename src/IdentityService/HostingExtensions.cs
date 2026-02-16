@@ -120,7 +120,10 @@ internal static class HostingExtensions
         builder.Services.AddAuthentication();
 
         builder.Services.AddTransient<IEmailSender, EmailSender>();
-        builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+        builder.Services.AddOptions<AuthMessageSenderOptions>()
+            .Bind(builder.Configuration.GetSection(nameof(AuthMessageSenderOptions)))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
         return builder.Build();
     }

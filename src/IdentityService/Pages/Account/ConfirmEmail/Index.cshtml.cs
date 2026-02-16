@@ -1,10 +1,13 @@
 using System.Text;
+using IdentityService.Constants;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using static IdentityService.Constants.IdentityConstants;
+using static IdentityService.Constants.ErrorMessages;
 
 namespace IdentityService.Pages.Account.ConfirmEmail;
 
@@ -19,19 +22,19 @@ public class Index(UserManager<ApplicationUser> userManager) : PageModel
 
         if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
         {
-            return RedirectToPage("/Index");
+            return RedirectToPage(PageRoutes.Home);
         }
 
         var user = await userManager.FindByIdAsync(userId);
         if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{userId}'.");
+            return NotFound(string.Format(UserNotFoundWithId, userId));
         }
 
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
 
         var result = await userManager.ConfirmEmailAsync(user, code);
-        Input.StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+        Input.StatusMessage = result.Succeeded ? ConfirmEmailSuccess : ConfirmEmailFailure;
 
         return Page();
     }

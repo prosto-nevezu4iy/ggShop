@@ -1,12 +1,11 @@
 using System.Security.Claims;
-using System.Text;
 using Duende.IdentityModel;
+using IdentityService.Constants;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace IdentityService.Pages.Account.Register;
 
@@ -14,10 +13,13 @@ namespace IdentityService.Pages.Account.Register;
 [AllowAnonymous]
 public class Index(UserManager<ApplicationUser> userManager) : PageModel
 {
-    [BindProperty] public required RegisterViewModel Input { get; set; }
-    [BindProperty] public bool RegisterSuccess { get; set; }
+    [BindProperty]
+    public RegisterViewModel Input { get; set; } = new();
 
-    public IActionResult OnGet(string? returnUrl = null)
+    [BindProperty]
+    public bool RegisterSuccess { get; set; }
+
+    public IActionResult OnGet(string returnUrl = null)
     {
         Input.ReturnUrl = returnUrl;
         return Page();
@@ -25,7 +27,10 @@ public class Index(UserManager<ApplicationUser> userManager) : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        if (Input.Button != "register") return Redirect("~/");
+        if (Input.Button != "register")
+        {
+            return Redirect("~/");
+        }
 
         if (ModelState.IsValid)
         {
@@ -45,7 +50,7 @@ public class Index(UserManager<ApplicationUser> userManager) : PageModel
 
                 RegisterSuccess = true;
 
-                return RedirectToPage("/Account/RegisterConfirmation/Index", new { email = Input.Email, returnUrl = Input.ReturnUrl });
+                return RedirectToPage(PageRoutes.RegisterConfirmation, new { email = Input.Email, returnUrl = Input.ReturnUrl });
             }
         }
 

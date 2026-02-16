@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using IdentityConstants = IdentityService.Constants.IdentityConstants;
 
 namespace IdentityService.Pages.Account.ForgotPassword;
 
@@ -15,7 +16,7 @@ namespace IdentityService.Pages.Account.ForgotPassword;
 public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailSender) : PageModel
 {
     [BindProperty]
-    public required ForgotPasswordViewModel Input { get; set; }
+    public ForgotPasswordViewModel Input { get; set; }
 
     public void OnGet()
     {
@@ -27,31 +28,30 @@ public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailS
         if (ModelState.IsValid)
         {
             var user = await userManager.FindByEmailAsync(Input.Email);
-            if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
+            if (user is null || !await userManager.IsEmailConfirmedAsync(user))
             {
                 // Don't reveal that the user does not exist or is not confirmed
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                return RedirectToPage(PageRoutes.ForgotPasswordConfirmation);
             }
 
-            // For more information on how to enable account confirmation and password reset please
-            // visit https://go.microsoft.com/fwlink/?LinkID=532713
             var code = await userManager.GeneratePasswordResetTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
             var callbackUrl = Url.Page(
-                "/Account/ResetPassword/Index",
+                PageRoutes.ResetPassword,
                 pageHandler: null,
                 values: new { code },
                 protocol: Request.Scheme)!;
 
             var emailParams = new Dictionary<string, string>
             {
-                { Email.Username, user.UserName! },
-                { Email.ResetLink, HtmlEncoder.Default.Encode(callbackUrl) }
+                { IdentityConstants.Username, user.UserName },
+                { IdentityConstants.ResetLink, HtmlEncoder.Default.Encode(callbackUrl) }
             };
 
-            await emailSender.SendEmailAsync(Input.Email, emailParams, Email.ForgotPasswordTemplateId);
+            await emailSender.SendEmailAsync(Input.Email, emailParams, IdentityConstants.ForgotPasswordTemplateId);
 
-            return RedirectToPage("/Account/ForgotPasswordConfirmation/Index");
+            return RedirectToPage(PageRoutes.ForgotPasswordConfirmation);
         }
 
         return Page();

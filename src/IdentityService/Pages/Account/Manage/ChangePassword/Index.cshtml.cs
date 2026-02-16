@@ -3,19 +3,22 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static IdentityService.Constants.ErrorMessages;
+using static IdentityService.Constants.SuccessMessages;
 
 namespace IdentityService.Pages.Account.Manage.ChangePassword;
 
 public class Index(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ChangePasswordViewModel> logger) : PageModel
 {
-    [BindProperty] public required ChangePasswordViewModel Input { get; set; }
+    [BindProperty]
+    public ChangePasswordViewModel Input { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
         var user = await userManager.GetUserAsync(User);
-        if (user == null)
+        if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(UserNotFoundWithId, userManager.GetUserId(User)));
         }
 
         return Page();
@@ -29,9 +32,9 @@ public class Index(UserManager<ApplicationUser> userManager, SignInManager<Appli
         }
 
         var user = await userManager.GetUserAsync(User);
-        if (user == null)
+        if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(UserNotFoundWithId, userManager.GetUserId(User)));
         }
 
         var changePasswordResult = await userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
@@ -46,7 +49,7 @@ public class Index(UserManager<ApplicationUser> userManager, SignInManager<Appli
 
         await signInManager.RefreshSignInAsync(user);
         logger.LogInformation(LoggerEventIds.PasswordChanged, "User changed their password successfully.");
-        Input.StatusMessage = "Your password has been changed.";
+        Input.StatusMessage = PasswordHasBeenChanged;
 
         return Page();
     }

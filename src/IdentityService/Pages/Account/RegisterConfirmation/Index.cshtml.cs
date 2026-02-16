@@ -7,13 +7,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using static IdentityService.Constants.ErrorMessages;
+using IdentityConstants = IdentityService.Constants.IdentityConstants;
 
 namespace IdentityService.Pages.Account.RegisterConfirmation;
 
 [AllowAnonymous]
 public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailSender) : PageModel
 {
-    public async Task<IActionResult> OnGet(string email, string? returnUrl = null)
+    public async Task<IActionResult> OnGet(string email, string returnUrl = null)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -24,18 +26,18 @@ public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailS
         var user = await userManager.FindByEmailAsync(email);
         if (user is null)
         {
-            return NotFound($"Unable to load user with email '{email}'.");
+            return NotFound(string.Format(UserNotFoundWithEmail, email));
         }
 
         var emailConfirmationUrl = await GetEmailConfirmationUrl(returnUrl, user);
 
         var emailParams = new Dictionary<string, string>
         {
-            { Email.Username, user.UserName! },
-            { Email.Link, emailConfirmationUrl ?? string.Empty }
+            { IdentityConstants.Username, user.UserName },
+            { IdentityConstants.Link, emailConfirmationUrl ?? string.Empty }
         };
 
-        await emailSender.SendEmailAsync(user.Email!, emailParams, Email.AccountConfirmationTemplateId);
+        await emailSender.SendEmailAsync(user.Email, emailParams, IdentityConstants.AccountConfirmationTemplateId);
 
         return Page();
     }
@@ -48,9 +50,9 @@ public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailS
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
         return Url.Page(
-            "/Account/ConfirmEmail/Index",
+            PageRoutes.ConfirmEmail,
             pageHandler: null,
-            values: new { userId = userId, code = code, returnurl = returnUrl },
+            values: new { userId, code, returnurl = returnUrl },
             protocol: Request.Scheme);
     }
 }

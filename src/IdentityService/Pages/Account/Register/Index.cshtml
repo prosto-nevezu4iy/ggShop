@@ -1,4 +1,5 @@
 @page
+@using IdentityService.Constants
 @model IdentityService.Pages.Account.Register.Index
 
 <div>
@@ -11,7 +12,7 @@
                     <h2>Register</h2>
                 </div>
                 <div class="card-body">
-                    <form asp-page="/Account/Register/Index">
+                    <form asp-page="@PageRoutes.Register">
                         <input type="hidden" asp-for="Input.ReturnUrl" />
 
                         <div class="form-group">
@@ -25,7 +26,7 @@
                                    autocomplete="off">
                         </div>
 
-                        <a class="pb-2 d-block" asp-page="../Login/Index"
+                        <a class="pb-2 d-block" asp-page="@PageRoutes.Login"
                            asp-route-returnUrl="@Model.Input.ReturnUrl">
                             Already registered? Login here
                         </a>

@@ -1,4 +1,5 @@
 @page
+@using IdentityService.Constants
 @model IdentityService.Pages.Account.Login.Index
 
 <div class="login-page">
@@ -15,7 +16,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form asp-page="/Account/Login/Index">
+                        <form asp-page="@PageRoutes.Login">
                             <input type="hidden" asp-for="Input.ReturnUrl" />
 
                             <div class="form-group">
@@ -41,15 +42,15 @@
 
                             <div>
                                 <p>
-                                    <a id="forgot-password" asp-page="../ForgotPassword/Index">Forgot your password?</a>
+                                    <a id="forgot-password" asp-page="@PageRoutes.ForgotPassword">Forgot your password?</a>
                                 </p>
                                 <p>
-                                    <a asp-page="../Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
+                                    <a asp-page="@PageRoutes.Register" asp-route-returnUrl="@Model.Input.ReturnUrl">
                                         New User? Register here
                                     </a>
                                 </p>
                                 <p>
-                                    <a id="resend-confirmation" asp-page="../ResendEmailConfirmation/Index">Resend email confirmation</a>
+                                    <a id="resend-confirmation" asp-page="@PageRoutes.ResendEmailConfirmation">Resend email confirmation</a>
                                 </p>
                             </div>
 
@@ -74,7 +75,7 @@
                             {
                                 <li class="list-inline-item">
                                     <a class="btn btn-secondary"
-                                       asp-page="/ExternalLogin/Challenge"
+                                       asp-page="@PageRoutes.ExternalLogin"
                                        asp-route-scheme="@provider.AuthenticationScheme"
                                        asp-route-returnUrl="@Model.Input.ReturnUrl">
                                         @provider.DisplayName

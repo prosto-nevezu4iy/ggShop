@@ -7,13 +7,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using static IdentityService.Constants.ErrorMessages;
+using static IdentityService.Constants.SuccessMessages;
+using IdentityConstants = IdentityService.Constants.IdentityConstants;
 
 namespace IdentityService.Pages.Account.ResendEmailConfirmation;
 
 [AllowAnonymous]
 public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailSender) : PageModel
 {
-    [BindProperty] public required ResendEmailConfirmationViewModel Input { get; set; }
+    [BindProperty]
+    public ResendEmailConfirmationViewModel Input { get; set; } = new();
 
     public void OnGet()
     {
@@ -28,27 +32,27 @@ public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailS
         }
 
         var user = await userManager.FindByEmailAsync(Input.Email);
-        if (user == null)
+        if (user is null)
         {
-            return NotFound($"Unable to load user with email '{Input.Email}'.");
+            return NotFound(string.Format(UserNotFoundWithEmail, Input.Email));
         }
 
         var emailConfirmationUrl = await GetEmailConfirmationUrl(user);
 
         var emailParams = new Dictionary<string, string>
         {
-            { Email.Username, user.UserName! },
-            { Email.Link, emailConfirmationUrl ?? string.Empty }
+            { IdentityConstants.Username, user.UserName },
+            { IdentityConstants.Link, emailConfirmationUrl ?? string.Empty }
         };
 
-        await emailSender.SendEmailAsync(user.Email!, emailParams, Email.AccountConfirmationTemplateId);
+        await emailSender.SendEmailAsync(user.Email, emailParams, IdentityConstants.AccountConfirmationTemplateId);
 
-        Input.StatusMessage = "Verification email sent. Please check your email.";
+        Input.StatusMessage = VerificationEmailSent;
 
         return Page();
     }
 
-    private async Task<string?> GetEmailConfirmationUrl(ApplicationUser user)
+    private async Task<string> GetEmailConfirmationUrl(ApplicationUser user)
     {
         var userId = await userManager.GetUserIdAsync(user);
 
@@ -56,9 +60,9 @@ public class Index(UserManager<ApplicationUser> userManager, IEmailSender emailS
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
         return Url.Page(
-            "/Account/ConfirmEmail/Index",
+            PageRoutes.ConfirmEmail,
             pageHandler: null,
-            values: new { userId = userId, code = code },
+            values: new { userId, code },
             protocol: Request.Scheme);
     }
 }

@@ -1,10 +1,12 @@
 using System.Text;
+using IdentityService.Constants;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using static IdentityService.Constants.ErrorMessages;
 
 namespace IdentityService.Pages.Account.ResetPassword;
 
@@ -12,13 +14,13 @@ namespace IdentityService.Pages.Account.ResetPassword;
 public class Index(UserManager<ApplicationUser> userManager) : PageModel
 {
     [BindProperty]
-    public required ResetPasswordViewModel Input { get; set; }
+    public ResetPasswordViewModel Input { get; set; }
 
-    public IActionResult OnGet(string? code = null)
+    public IActionResult OnGet(string code = null)
     {
-        if (code == null)
+        if (code is null)
         {
-            return BadRequest("A code must be supplied for password reset.");
+            return BadRequest(MustProvideCode);
         }
 
         Input = new ResetPasswordViewModel
@@ -42,13 +44,13 @@ public class Index(UserManager<ApplicationUser> userManager) : PageModel
         if (user == null)
         {
             // Don't reveal that the user does not exist
-            return RedirectToPage("./ResetPasswordConfirmation");
+            return RedirectToPage(PageRoutes.ResetPasswordConfirmation);
         }
 
         var result = await userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
         if (result.Succeeded)
         {
-            return RedirectToPage("../ResetPasswordConfirmation/Index");
+            return RedirectToPage(PageRoutes.ResetPasswordConfirmation);
         }
 
         foreach (var error in result.Errors)

@@ -4,6 +4,7 @@ using IdentityService.Configurations;
 using Microsoft.Extensions.Options;
 using Configuration = brevo_csharp.Client.Configuration;
 using Task = System.Threading.Tasks.Task;
+using static IdentityService.Constants.IdentityConstants;
 
 namespace IdentityService.Services;
 
@@ -16,25 +17,20 @@ public class EmailSender(
 
     public async Task SendEmailAsync(string email, Dictionary<string, string> parameters, int templateId)
     {
-        if (string.IsNullOrEmpty(Options.BrevoKey))
-        {
-            throw new Exception("Null BrevoKey");
-        }
-
         await Execute(Options.BrevoKey, email, parameters, templateId);
     }
 
     private async Task Execute(string brevoKey, string email, Dictionary<string, string> parameters, int templateId)
     {
-        if (!Configuration.Default.ApiKey.ContainsKey("api-key"))
+        if (!Configuration.Default.ApiKey.ContainsKey(ApiKey))
         {
-            Configuration.Default.AddApiKey("api-key", brevoKey);
+            Configuration.Default.AddApiKey(ApiKey, brevoKey);
         }
 
         var apiInstance = new TransactionalEmailsApi();
         var sendSmtpEmail = new SendSmtpEmail
         {
-            To = [new(email, parameters["USERNAME"])],
+            To = [new(email, parameters[Username])],
             TemplateId = templateId,
             Params = parameters,
         };

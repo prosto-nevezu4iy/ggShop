@@ -2,6 +2,7 @@ using Duende.IdentityModel;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Services;
+using IdentityService.Constants;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityService.Pages.Logout;
+namespace IdentityService.Pages.Account.Logout;
 
 [SecurityHeaders]
 [AllowAnonymous]
@@ -20,7 +21,7 @@ public class Index : PageModel
     private readonly IEventService _events;
 
     [BindProperty]
-    public string? LogoutId { get; set; }
+    public string LogoutId { get; set; }
 
     public Index(SignInManager<ApplicationUser> signInManager, IIdentityServerInteractionService interaction, IEventService events)
     {
@@ -29,7 +30,7 @@ public class Index : PageModel
         _events = events;
     }
 
-    public async Task<IActionResult> OnGet(string? logoutId)
+    public async Task<IActionResult> OnGet(string logoutId)
     {
         LogoutId = logoutId;
 
@@ -88,7 +89,7 @@ public class Index : PageModel
                     // build a return URL so the upstream provider will redirect back
                     // to us after the user has logged out. this allows us to then
                     // complete our single sign-out processing.
-                    var url = Url.Page("/Account/Logout/Loggedout", new { logoutId = LogoutId });
+                    var url = Url.Page(PageRoutes.LoggedOut, new { logoutId = LogoutId });
 
                     // this triggers a redirect to the external provider for sign-out
                     return SignOut(new AuthenticationProperties { RedirectUri = url }, idp);
@@ -96,6 +97,6 @@ public class Index : PageModel
             }
         }
 
-        return RedirectToPage("/Account/Logout/LoggedOut", new { logoutId = LogoutId });
+        return RedirectToPage(PageRoutes.LoggedOut, new { logoutId = LogoutId });
     }
 }
