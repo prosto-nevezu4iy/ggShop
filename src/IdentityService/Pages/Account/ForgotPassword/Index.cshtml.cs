@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Encodings.Web;
+using IdentityService.Abstractions;
 using IdentityService.Constants;
 using IdentityService.Models;
 using IdentityService.Services;

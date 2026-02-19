@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.70.0" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.13" />
 	<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 	<PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
 	<PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.Application\Common.Application.csproj" />
+    <ProjectReference Include="..\Common\Common.Infrastructure\Common.Infrastructure.csproj" />
     <ProjectReference Include="..\Common\Common.Presentation\Common.Presentation.csproj" />
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>

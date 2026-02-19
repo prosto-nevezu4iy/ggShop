@@ -1,3 +1,4 @@
+using Common.Infrastructure.Authorization;
 using Common.Presentation;
 using Common.Presentation.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -18,13 +19,16 @@ public static class ShoppingCartEndpoints
             .WithName(nameof(GetShoppingCart));
 
         api.MapPost("/", AddItemToBasket)
-            .WithName(nameof(AddItemToBasket));
+            .WithName(nameof(AddItemToBasket))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.ShoppingCartCreate));
 
         api.MapPut("/{GameId:Guid}", UpdateShoppingCartItem)
-            .WithName(nameof(UpdateShoppingCartItem));
+            .WithName(nameof(UpdateShoppingCartItem))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.ShoppingCartUpdate));
 
         api.MapDelete("/", DeleteShoppingCart)
-            .WithName(nameof(DeleteShoppingCart));
+            .WithName(nameof(DeleteShoppingCart))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.ShoppingCartDelete));
 
         #if DEBUG
                 api.MapPost("/seed/{userCount:int}", SeedShoppingCarts);

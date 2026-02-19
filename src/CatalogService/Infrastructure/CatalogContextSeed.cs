@@ -58,6 +58,10 @@ public class CatalogContextSeed
             var sourceJson = await File.ReadAllTextAsync(sourcePath);
             var sourceItems = JsonSerializer.Deserialize<List<Game>>(sourceJson);
 
+            var allPlatforms = await context.Platforms.ToListAsync();
+            var allPublishers = await context.Publishers.ToListAsync();
+            var allGenres = await context.Genres.ToListAsync();
+
             var games = sourceItems.Select(s => new Game
             {
                 Id = s.Id,
@@ -68,15 +72,15 @@ public class CatalogContextSeed
                 Price = s.Price,
                 Discount = s.Discount,
                 AvailableStock = s.AvailableStock,
-                Platforms = context.Platforms.Where(pf => s.Platforms.Any(x => x.Name == pf.Name)).ToList(),
-                Publisher = context.Publishers.FirstOrDefault(x => x.Name == s.Publisher.Name),
+                Platforms = allPlatforms.Where(pf => s.Platforms.Any(x => x.Name == pf.Name)).ToList(),
+                Publisher = allPublishers.FirstOrDefault(x => x.Name == s.Publisher.Name),
                 ReleaseDate = s.ReleaseDate,
                 Rating = s.Rating,
                 ImageUrl = s.ImageUrl,
                 TrailerUrl = s.TrailerUrl,
                 BackgroundUrl = s.BackgroundUrl,
                 ScreenShotUrls = s.ScreenShotUrls,
-                Genres = context.Genres.Where(gn => s.Genres.Any(x => x.Name == gn.Name)).ToList()
+                Genres = allGenres.Where(gn => s.Genres.Any(x => x.Name == gn.Name)).ToList()
             }).ToList();
 
             await context.Games.AddRangeAsync(games);

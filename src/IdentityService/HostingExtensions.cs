@@ -1,16 +1,19 @@
 using System.Globalization;
+using Common.Infrastructure.Authorization;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
+using IdentityService.Abstractions;
 using IdentityService.Configurations;
 using IdentityService.Data;
 using IdentityService.Models;
 using IdentityService.Services;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Filters;
-using IEmailSender = IdentityService.Services.IEmailSender;
+using IEmailSender = IdentityService.Abstractions.IEmailSender;
 
 namespace IdentityService;
 
@@ -119,7 +122,9 @@ internal static class HostingExtensions
 
         builder.Services.AddAuthentication();
 
+        builder.Services.AddMemoryCache();
         builder.Services.AddTransient<IEmailSender, EmailSender>();
+        builder.Services.AddTransient<IPermissionService, PermissionService>();
         builder.Services.AddOptions<AuthMessageSenderOptions>()
             .Bind(builder.Configuration.GetSection(nameof(AuthMessageSenderOptions)))
             .ValidateDataAnnotations()

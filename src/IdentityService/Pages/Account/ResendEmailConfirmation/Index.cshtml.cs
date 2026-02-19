@@ -1,4 +1,5 @@
 using System.Text;
+using IdentityService.Abstractions;
 using IdentityService.Constants;
 using IdentityService.Models;
 using IdentityService.Services;

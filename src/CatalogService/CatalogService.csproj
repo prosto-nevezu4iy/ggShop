@@ -13,7 +13,7 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.4.0" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.Application\Common.Application.csproj" />
     <ProjectReference Include="..\Common\Common.Domain\Common.Domain.csproj" />
+    <ProjectReference Include="..\Common\Common.Infrastructure\Common.Infrastructure.csproj" />
     <ProjectReference Include="..\Common\Common.Presentation\Common.Presentation.csproj" />
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>

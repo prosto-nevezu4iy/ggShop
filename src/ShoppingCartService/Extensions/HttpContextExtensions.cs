@@ -1,4 +1,4 @@
-using Common.Presentation.Extensions;
+using Common.Infrastructure.Authentication;
 using static Common.Application.Constants.IdentityConstants;
 
 namespace ShoppingCartService.Extensions;
@@ -11,7 +11,7 @@ public static class HttpContextExtensions
 
         if (userIdentity is { IsAuthenticated: true })
         {
-            return httpContext.GetUserIdentity();
+            return httpContext.User.GetUserIdentity();
         }
 
         if (httpContext.Request.Cookies.ContainsKey(CookieName))

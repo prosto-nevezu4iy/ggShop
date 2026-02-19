@@ -1,5 +1,6 @@
 using brevo_csharp.Api;
 using brevo_csharp.Model;
+using IdentityService.Abstractions;
 using IdentityService.Configurations;
 using Microsoft.Extensions.Options;
 using Configuration = brevo_csharp.Client.Configuration;

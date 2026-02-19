@@ -19,11 +19,12 @@
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.11" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Common\Common.Application\Common.Application.csproj" />
+	  <ProjectReference Include="..\Common\Common.Infrastructure\Common.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Contracts\Contracts.csproj" />
 	</ItemGroup>
 </Project>

@@ -3,6 +3,8 @@ using CatalogService.Abstractions;
 using CatalogService.DTOs;
 using CatalogService.RequestHelpers;
 using Common.Application.Requests.Pagination;
+using Common.Infrastructure.Authentication;
+using Common.Infrastructure.Authorization;
 using Common.Presentation;
 using Common.Presentation.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -23,22 +25,28 @@ public static class GameEndpoints
             .WithName(nameof(GetGameById));
 
         api.MapPost("/", CreateGame)
-            .WithName(nameof(CreateGame));
+            .WithName(nameof(CreateGame))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.CatalogCreate));
 
         api.MapPut("/{id:Guid}", UpdateGame)
-            .WithName(nameof(UpdateGame));
+            .WithName(nameof(UpdateGame))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.CatalogUpdate));
 
         api.MapDelete("/{id:Guid}", DeleteGame)
-            .WithName(nameof(DeleteGame));
+            .WithName(nameof(DeleteGame))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.CatalogDelete));
 
         api.MapPost("/{id:Guid}/ratings", AddRating)
-            .WithName(nameof(AddRating));
+            .WithName(nameof(AddRating))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.CatalogCreate));
 
         api.MapPut("/{id:Guid}/ratings", UpdateRating)
-            .WithName(nameof(UpdateRating));
+            .WithName(nameof(UpdateRating))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.CatalogUpdate));
 
         api.MapDelete("/{id:Guid}/ratings", DeleteRating)
-            .WithName(nameof(DeleteRating));
+            .WithName(nameof(DeleteRating))
+            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.CatalogDelete));
 
         return app;
     }
@@ -48,7 +56,7 @@ public static class GameEndpoints
         IGameService gameService) =>
         TypedResults.Ok(await gameService.GetGamesAsync(request));
 
-    static async Task<Results<Ok<GameDto>, ProblemHttpResult>> GetGameById(Guid id, IGameService gameService)
+    static async Task<Results<Ok<GameDto>, ProblemHttpResult>> GetGameById(HttpContext httpContext, Guid id, IGameService gameService)
     {
         var result = await gameService.GetGameByIdAsync(id);
 
@@ -107,7 +115,7 @@ public static class GameEndpoints
         IUserRatingService userRatingService,
         LinkGenerator linkGenerator)
     {
-        var result = await userRatingService.AddUserRatingAsync(id, httpContext.GetUserIdentity(), createUserRatingDto);
+        var result = await userRatingService.AddUserRatingAsync(id, httpContext.User.GetUserIdentity(), createUserRatingDto);
 
         return result.Match(
             value => TypedResults.Created(

@@ -1,4 +1,4 @@
-﻿using Common.Presentation.Extensions;
+﻿using Common.Infrastructure.Authentication;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using ShoppingCartService.Abstractions;
@@ -20,7 +20,7 @@ public class GrpcShoppingCartService : GrpcShoppingCart.GrpcShoppingCartBase
 
     public override async Task<GetShoppingCartResponse> GetShoppingCart(GetShoppingCartRequest request, ServerCallContext context)
     {
-        var userId = context.GetHttpContext().GetUserIdentity();
+        var userId = context.GetHttpContext().User.GetUserIdentity();
 
         _logger.LogDebug("Begin GetShoppingCart call from method {Method} for basket id {Id}", context.Method, userId);
 
