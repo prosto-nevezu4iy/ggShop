@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Common.Infrastructure.Authentication;
 using Duende.IdentityModel;
 using IdentityService.Constants;
 using IdentityService.Models;
@@ -47,6 +48,8 @@ public class Index(UserManager<ApplicationUser> userManager) : PageModel
                 await userManager.AddClaimsAsync(user, [
                     new Claim(JwtClaimTypes.NickName, user.UserName),
                 ]);
+
+                await userManager.AddToRoleAsync(user, nameof(Roles.User));
 
                 RegisterSuccess = true;
 

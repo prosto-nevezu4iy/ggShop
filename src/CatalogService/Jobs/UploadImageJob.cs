@@ -1,4 +1,5 @@
 ﻿using CatalogService.Abstractions;
+using CatalogService.Abstractions.Games;
 using Quartz;
 
 namespace CatalogService.Jobs;

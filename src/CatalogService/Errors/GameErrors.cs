@@ -27,4 +27,6 @@ public static class GameErrors
 
     public static Error UserRatingNotFound =>
         Error.NotFound("Catalog.UserRatingNotFound", "User Rating was not found.");
+
+    public static string MustBeValidUrl => "Must be a valid URL.";
 }

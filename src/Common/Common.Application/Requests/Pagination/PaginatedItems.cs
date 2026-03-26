@@ -1,8 +1,8 @@
 ﻿namespace Common.Application.Requests.Pagination;
 
-public class PaginatedItems<TEntity>(int pageIndex, int pageSize, int totalCount, IEnumerable<TEntity> results) where TEntity : class
+public class PaginatedItems<TEntity>(int pageNumber, int pageSize, int totalCount, IEnumerable<TEntity> results) where TEntity : class
 {
-    public int PageIndex { get; } = pageIndex;
+    public int PageNumber { get; } = pageNumber;
 
     public int PageSize { get; } = pageSize;
 

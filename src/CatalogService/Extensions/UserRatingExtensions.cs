@@ -1,4 +1,5 @@
 using CatalogService.DTOs;
+using CatalogService.DTOs.Games;
 using CatalogService.Entities;
 
 namespace CatalogService.Extensions;

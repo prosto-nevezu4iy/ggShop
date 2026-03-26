@@ -19,16 +19,13 @@ public static class ShoppingCartEndpoints
             .WithName(nameof(GetShoppingCart));
 
         api.MapPost("/", AddItemToBasket)
-            .WithName(nameof(AddItemToBasket))
-            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.ShoppingCartCreate));
+            .WithName(nameof(AddItemToBasket));
 
         api.MapPut("/{GameId:Guid}", UpdateShoppingCartItem)
-            .WithName(nameof(UpdateShoppingCartItem))
-            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.ShoppingCartUpdate));
+            .WithName(nameof(UpdateShoppingCartItem));
 
         api.MapDelete("/", DeleteShoppingCart)
-            .WithName(nameof(DeleteShoppingCart))
-            .RequireAuthorization(policy => policy.RequirePermission(PermissionsList.ShoppingCartDelete));
+            .WithName(nameof(DeleteShoppingCart));
 
         #if DEBUG
                 api.MapPost("/seed/{userCount:int}", SeedShoppingCarts);

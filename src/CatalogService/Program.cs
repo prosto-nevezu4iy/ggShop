@@ -1,7 +1,8 @@
-﻿using CatalogService.Endpoints;
-using CatalogService.Extensions;
+﻿using CatalogService.Extensions;
 using CatalogService.Infrastructure;
-using CatalogService.Services;
+using CatalogService.Services.Games;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 using Serilog;
 
 try
@@ -14,18 +15,9 @@ try
 
     var app = builder.Build();
 
-    app.UseAuthentication();
-    app.UseAuthorization();
+    app.AddMiddlewares(builder.Configuration);
 
-    app.UseSerilogRequestLogging();
-
-    app.UseExceptionHandler();
-
-    // Configure the HTTP request pipeline.
     await CatalogContextSeed.InitDb(app);
-
-    app.MapGamesApiEndpoints();
-    app.MapGrpcService<GrpcCatalogService>();
 
     app.Run();
 }

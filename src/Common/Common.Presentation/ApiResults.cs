@@ -1,6 +1,7 @@
 using Common.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Presentation;
 
@@ -19,6 +20,50 @@ public static class ApiResults
             type: GetType(result.Error.Type),
             statusCode: GetStatusCode(result.Error.Type),
             extensions: GetErrors(result));
+    }
+
+    public static ActionResult<T> ProblemForOk1<T>(Result<T> result)
+    {
+        if (result.IsSuccess)
+        {
+            throw new InvalidOperationException();
+        }
+
+        var problemDetails = new ProblemDetails
+        {
+            Title = GetTitle(result.Error),
+            Detail = GetDetail(result.Error),
+            Type = GetType(result.Error.Type),
+            Status = GetStatusCode(result.Error.Type),
+            Extensions = GetErrors(result) ?? []
+        };
+
+        return new ObjectResult(problemDetails)
+        {
+            StatusCode = GetStatusCode(result.Error.Type)
+        };
+    }
+
+    public static ActionResult ProblemForOk1(Result result)
+    {
+        if (result.IsSuccess)
+        {
+            throw new InvalidOperationException();
+        }
+
+        var problemDetails = new ProblemDetails
+        {
+            Title = GetTitle(result.Error),
+            Detail = GetDetail(result.Error),
+            Type = GetType(result.Error.Type),
+            Status = GetStatusCode(result.Error.Type),
+            Extensions = GetErrors(result) ?? []
+        };
+
+        return new ObjectResult(problemDetails)
+        {
+            StatusCode = GetStatusCode(result.Error.Type)
+        };
     }
 
     public static Results<Created<T>, ProblemHttpResult> ProblemForCreated<T>(Result<T> result)

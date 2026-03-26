@@ -20,12 +20,17 @@ public static class Config
     [
         new()
         {
-            ClientId = "postman",
-            ClientName = "Postman",
+            ClientId = "scalar",
+            ClientName = "Scalar",
             AllowedScopes = { "openid", "profile", "catalogApp", "shoppingCartApp" },
-            RedirectUris = { "https://getpostman.com/oauth2/callback" },
+            RedirectUris = { "http://localhost:7001/scalar/" },
             ClientSecrets = [new Secret("notASecret".Sha256())],
-            AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+            AllowedGrantTypes = GrantTypes.Code,
+            AllowAccessTokensViaBrowser = true,
+            AllowedCorsOrigins =
+            {
+                "http://localhost:7001"
+            }
         }
     ];
 }

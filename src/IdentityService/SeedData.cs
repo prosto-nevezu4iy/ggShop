@@ -18,10 +18,10 @@ public static class SeedData
         using var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
         await MigrateDatabaseAsync(scope);
-        await SeedUsersAsync(scope);
         await SeedRolesAsync(scope);
         await SeedPermissionsAsync(scope);
         await SeedRolesPermissionsAsync(scope);
+        await SeedUsersAsync(scope);
     }
     private static async Task MigrateDatabaseAsync(IServiceScope scope)
     {
@@ -171,6 +171,12 @@ public static class SeedData
         };
 
         result = await userMgr.AddClaimsAsync(user, claims);
+        if (!result.Succeeded)
+        {
+            throw new Exception(result.Errors.First().Description);
+        }
+
+        result = await userMgr.AddToRoleAsync(user, nameof(Roles.Admin));
         if (!result.Succeeded)
         {
             throw new Exception(result.Errors.First().Description);

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Common.Infrastructure.Authentication;
 using Common.Infrastructure.Authorization;
 using Duende.IdentityModel;
+using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using IdentityService.Abstractions;
@@ -27,7 +28,8 @@ public class CustomProfileService : IProfileService
 
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
-        var user = await _userManager.GetUserAsync(context.Subject)
+        var userId = context.Subject.GetSubjectId();
+        var user = await _userManager.FindByIdAsync(userId)
             ?? throw new Exception("User not found");
 
         var claims = new List<Claim>();

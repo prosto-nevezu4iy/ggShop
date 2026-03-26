@@ -1,3 +1,9 @@
 namespace Common.Application.Requests.Pagination;
 
-public abstract record PagedRequest(int PageIndex = 0, int PageSize = 3);
+public abstract record PagedRequest
+{
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 3;
+
+    public int GetOffset() => (PageNumber - 1) * PageSize;
+}

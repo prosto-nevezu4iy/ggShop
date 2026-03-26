@@ -14,4 +14,4 @@ public record GamePagedFilterRequest(
     Guid[] Platforms,
     Guid? Publisher,
     bool? IsAvailable,
-    SortRequest<GameSortOption> Sort) : PagedRequest, IFilterRequest;
+    GameSortOption? Sort) : PagedRequest, IFilterRequest, ISortRequest<GameSortOption>;
