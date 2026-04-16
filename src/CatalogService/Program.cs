@@ -9,7 +9,6 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add services to the container.
     builder.Host.AddHostBuilderServices();
     builder.AddApplicationServices();
 
@@ -21,7 +20,7 @@ try
 
     app.Run();
 }
-catch (Exception ex) when (ex is not HostAbortedException)
+catch (Exception ex)
 {
     Log.Fatal(ex, "Application terminated unexpectedly");
 }

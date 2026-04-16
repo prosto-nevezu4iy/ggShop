@@ -38,10 +38,7 @@ public static class ApiResults
             Extensions = GetErrors(result) ?? []
         };
 
-        return new ObjectResult(problemDetails)
-        {
-            StatusCode = GetStatusCode(result.Error.Type)
-        };
+        return new ObjectResult(problemDetails);
     }
 
     public static ActionResult ProblemForOk1(Result result)

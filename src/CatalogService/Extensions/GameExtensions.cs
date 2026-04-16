@@ -1,4 +1,3 @@
-using CatalogService.DTOs;
 using CatalogService.DTOs.Games;
 using CatalogService.DTOs.Genres;
 using CatalogService.DTOs.Platforms;

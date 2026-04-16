@@ -130,9 +130,6 @@ public static class ServiceExtensions
                 [new OpenApiSecuritySchemeReference(nameof(SecuritySchemeType.OAuth2), document)] = []
             });
         });
-
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
     }
 
     public static void AddMiddlewares(this WebApplication app, IConfiguration configuration)
