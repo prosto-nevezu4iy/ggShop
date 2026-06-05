@@ -11,15 +11,8 @@ namespace CatalogService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GamesController : ControllerBase
+public class GamesController(IGameService gameService) : ControllerBase
 {
-    private readonly IGameService _gameService;
-
-    public GamesController(IGameService gameService)
-    {
-        _gameService = gameService;
-    }
-
     /// <summary>
     /// Gets a paginated list of games based on the provided filter criteria.
     /// </summary>
@@ -33,7 +26,7 @@ public class GamesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PaginatedItems<GameDto>>> GetGamesAsync([FromQuery] GamePagedFilterRequest request)
     {
-        var result = await _gameService.GetGamesAsync(request);
+        var result = await gameService.GetGamesAsync(request);
 
         return result.Match(
             value => Ok(value),
@@ -54,7 +47,7 @@ public class GamesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GameDto>> GetGameByIdAsync(Guid id)
     {
-        var result = await _gameService.GetGameByIdAsync(id);
+        var result = await gameService.GetGameByIdAsync(id);
 
         return result.Match(
             value => Ok(value),
@@ -82,7 +75,7 @@ public class GamesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<GameDto>> CreateGameAsync(CreateGameDto request)
     {
-        var result = await _gameService.CreateGameAsync(request);
+        var result = await gameService.CreateGameAsync(request);
 
         return result.Match(
             value => CreatedAtRoute(nameof(GetGameByIdAsync), new { id = value.Id }, value),
@@ -113,7 +106,7 @@ public class GamesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> UpdateGameAsync(Guid id, UpdateGameDto request)
     {
-        var result = await _gameService.UpdateGameAsync(id, request);
+        var result = await gameService.UpdateGameAsync(id, request);
 
         return result.Match(
             NoContent,
@@ -141,7 +134,7 @@ public class GamesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> DeleteGameAsync(Guid id)
     {
-        var result = await _gameService.DeleteGameAsync(id);
+        var result = await gameService.DeleteGameAsync(id);
 
         return result.Match(
             NoContent,

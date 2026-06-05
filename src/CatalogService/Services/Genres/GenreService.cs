@@ -15,45 +15,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Services.Genres;
 
-public class GenreService : IGenreService
+public class GenreService(
+    CatalogContext dbContext,
+    IValidator<GenrePagedFilterRequest> genrePagedFilterValidator,
+    IValidator<CreateGenreDto> createValidator,
+    IValidator<UpdateGenreDto> updateValidator,
+    ISearchBuilder<Genre> searchBuilder,
+    IOrderBuilder<Genre, GenreSortOption> orderBuilder)
+    : IGenreService
 {
-    private readonly CatalogContext _dbContext;
-    private readonly IValidator<GenrePagedFilterRequest> _genrePagedFilterValidator;
-    private readonly IValidator<CreateGenreDto> _createValidator;
-    private readonly IValidator<UpdateGenreDto> _updateValidator;
-    private readonly ISearchBuilder<Genre> _searchBuilder;
-    private readonly IOrderBuilder<Genre, GenreSortOption> _orderBuilder;
-
-    public GenreService(
-        CatalogContext dbContext,
-        IValidator<GenrePagedFilterRequest> genrePagedFilterValidator,
-        IValidator<CreateGenreDto> createValidator,
-        IValidator<UpdateGenreDto> updateValidator,
-        ISearchBuilder<Genre> searchBuilder,
-        IOrderBuilder<Genre, GenreSortOption> orderBuilder)
-    {
-        _dbContext = dbContext;
-        _genrePagedFilterValidator = genrePagedFilterValidator;
-        _createValidator = createValidator;
-        _updateValidator = updateValidator;
-        _searchBuilder = searchBuilder;
-        _orderBuilder = orderBuilder;
-    }
-
     public async Task<Result<PaginatedItems<GenreDto>>> GetGenresAsync(GenrePagedFilterRequest request)
     {
-        var validationResult = await _genrePagedFilterValidator.ValidateAsync(request);
+        var validationResult = await genrePagedFilterValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
         {
             return new ValidationError(validationResult.ToErrorDictionary());
         }
 
-        var query = _dbContext.Genres.AsNoTracking();
+        var query = dbContext.Genres.AsNoTracking();
 
-        query = _searchBuilder.Build(query, request.SearchTerm);
+        query = searchBuilder.Build(query, request.SearchTerm);
 
-        query = _orderBuilder.Build(query, request.Sort);
+        query = orderBuilder.Build(query, request.Sort);
 
         var totalItems = await query.CountAsync();
 
@@ -68,7 +52,7 @@ public class GenreService : IGenreService
 
     public async Task<Result<GenreDto>> GetGenreByIdAsync(Guid id)
     {
-        var genre = await _dbContext.Genres.AsNoTracking().SingleOrDefaultAsync(g => g.Id == id);
+        var genre = await dbContext.Genres.AsNoTracking().SingleOrDefaultAsync(g => g.Id == id);
 
         return genre is null
             ? GenreErrors.NotFound(id)
@@ -77,7 +61,7 @@ public class GenreService : IGenreService
 
     public async Task<Result<GenreDto>> CreateGenreAsync(CreateGenreDto createGenreDto)
     {
-        var validationResult = await _createValidator.ValidateAsync(createGenreDto);
+        var validationResult = await createValidator.ValidateAsync(createGenreDto);
 
         if (!validationResult.IsValid)
         {
@@ -86,9 +70,9 @@ public class GenreService : IGenreService
 
         var genre = createGenreDto.ToEntity();
 
-        await _dbContext.Genres.AddAsync(genre);
+        await dbContext.Genres.AddAsync(genre);
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {
@@ -100,23 +84,23 @@ public class GenreService : IGenreService
 
     public async Task<Result> UpdateGenreAsync(Guid id, UpdateGenreDto updateGenreDto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(updateGenreDto);
+        var validationResult = await updateValidator.ValidateAsync(updateGenreDto);
 
         if (!validationResult.IsValid)
         {
             return new ValidationError(validationResult.ToErrorDictionary());
         }
 
-        var genre = await _dbContext.Genres.SingleOrDefaultAsync(g => g.Id == id);
+        var genre = await dbContext.Genres.SingleOrDefaultAsync(g => g.Id == id);
 
         if (genre is null)
         {
             return GenreErrors.NotFound(id);
         }
 
-        _dbContext.Entry(genre).CurrentValues.SetValues(updateGenreDto);
+        dbContext.Entry(genre).CurrentValues.SetValues(updateGenreDto);
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {
@@ -128,16 +112,16 @@ public class GenreService : IGenreService
 
     public async Task<Result> DeleteGenreAsync(Guid id)
     {
-        var genre = await _dbContext.Genres.SingleOrDefaultAsync(g => g.Id == id);
+        var genre = await dbContext.Genres.SingleOrDefaultAsync(g => g.Id == id);
 
         if (genre is null)
         {
             return GenreErrors.NotFound(id);
         }
 
-        _dbContext.Genres.Remove(genre);
+        dbContext.Genres.Remove(genre);
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {

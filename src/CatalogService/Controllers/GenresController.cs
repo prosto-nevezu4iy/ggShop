@@ -11,15 +11,8 @@ namespace CatalogService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GenresController : ControllerBase
+public class GenresController(IGenreService genreService) : ControllerBase
 {
-    private readonly IGenreService _genreService;
-
-    public GenresController(IGenreService genreService)
-    {
-        _genreService = genreService;
-    }
-
     /// <summary>
     /// Gets a paginated list of genres based on the provided filter criteria.
     /// </summary>
@@ -33,7 +26,7 @@ public class GenresController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PaginatedItems<GenreDto>>> GetGenresAsync([FromQuery] GenrePagedFilterRequest request)
     {
-        var result = await _genreService.GetGenresAsync(request);
+        var result = await genreService.GetGenresAsync(request);
 
         return result.Match(
             value => Ok(value),
@@ -54,7 +47,7 @@ public class GenresController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GenreDto>> GetGenreByIdAsync(Guid id)
     {
-        var result = await _genreService.GetGenreByIdAsync(id);
+        var result = await genreService.GetGenreByIdAsync(id);
 
         return result.Match(
             value => Ok(value),
@@ -82,7 +75,7 @@ public class GenresController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<GenreDto>> CreateGenreAsync(CreateGenreDto request)
     {
-        var result = await _genreService.CreateGenreAsync(request);
+        var result = await genreService.CreateGenreAsync(request);
 
         return result.Match(
             value => CreatedAtRoute(nameof(GetGenreByIdAsync), new { id = value.Id }, value),
@@ -114,7 +107,7 @@ public class GenresController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> UpdateGenreAsync(Guid id, UpdateGenreDto request)
     {
-        var result = await _genreService.UpdateGenreAsync(id, request);
+        var result = await genreService.UpdateGenreAsync(id, request);
 
         return result.Match(
             NoContent,
@@ -142,7 +135,7 @@ public class GenresController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> DeleteGenreAsync(Guid id)
     {
-        var result = await _genreService.DeleteGenreAsync(id);
+        var result = await genreService.DeleteGenreAsync(id);
 
         return result.Match(
             NoContent,

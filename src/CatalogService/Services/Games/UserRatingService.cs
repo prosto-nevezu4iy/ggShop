@@ -11,36 +11,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Services.Games;
 
-public class UserRatingService : IUserRatingService
+public class UserRatingService(
+    CatalogContext dbContext,
+    IValidator<CreateUserRatingDto> createUserRatingValidator,
+    IValidator<UpdateUserRatingDto> updateUserRatingValidator,
+    IGameService gameService)
+    : IUserRatingService
 {
-    private readonly CatalogContext _dbContext;
-    private readonly IValidator<CreateUserRatingDto> _createUserRatingValidator;
-    private readonly IValidator<UpdateUserRatingDto> _updateUserRatingValidator;
-    private readonly IGameService _gameService;
-
-    public UserRatingService(
-        CatalogContext dbContext,
-        IValidator<CreateUserRatingDto> createUserRatingValidator,
-        IValidator<UpdateUserRatingDto> updateUserRatingValidator,
-        IGameService gameService)
-    {
-        _dbContext = dbContext;
-        _createUserRatingValidator = createUserRatingValidator;
-        _updateUserRatingValidator = updateUserRatingValidator;
-        _gameService = gameService;
-    }
-
-
     public async Task<Result<UserRatingDto>> AddUserRatingAsync(Guid id, Guid userId, CreateUserRatingDto createUserRatingDto)
     {
-        var validationResult = await _createUserRatingValidator.ValidateAsync(createUserRatingDto);
+        var validationResult = await createUserRatingValidator.ValidateAsync(createUserRatingDto);
 
         if (!validationResult.IsValid)
         {
             return new ValidationError(validationResult.ToErrorDictionary());
         }
 
-        var game = await _gameService.GetGameEntityByIdAsync(id);
+        var game = await gameService.GetGameEntityByIdAsync(id);
 
         if (game is null)
         {
@@ -55,9 +42,9 @@ public class UserRatingService : IUserRatingService
             Rating = (byte)createUserRatingDto.Rating
         };
 
-        _dbContext.UserRatings.Add(newRating);
+        dbContext.UserRatings.Add(newRating);
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {
@@ -69,21 +56,21 @@ public class UserRatingService : IUserRatingService
 
     public async Task<Result> UpdateUserRatingAsync(Guid id, Guid userId, UpdateUserRatingDto updateUserRatingDto)
     {
-        var validationResult = await _updateUserRatingValidator.ValidateAsync(updateUserRatingDto);
+        var validationResult = await updateUserRatingValidator.ValidateAsync(updateUserRatingDto);
 
         if (!validationResult.IsValid)
         {
             return new ValidationError(validationResult.ToErrorDictionary());
         }
 
-        var game = await _gameService.GetGameEntityByIdAsync(id);
+        var game = await gameService.GetGameEntityByIdAsync(id);
 
         if (game is null)
         {
             return GameErrors.NotFound(id);
         }
 
-        var existingRating = await _dbContext.UserRatings
+        var existingRating = await dbContext.UserRatings
             .FirstOrDefaultAsync(r => r.GameId == id && r.UserId == userId);
 
         if (existingRating is not null)
@@ -91,7 +78,7 @@ public class UserRatingService : IUserRatingService
             existingRating.Rating = (byte)updateUserRatingDto.Rating;
         }
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {
@@ -103,7 +90,7 @@ public class UserRatingService : IUserRatingService
 
     public async Task<Result> DeleteUserRatingAsync(Guid id, Guid userId)
     {
-        var rating = await _dbContext.UserRatings
+        var rating = await dbContext.UserRatings
             .FirstOrDefaultAsync(r => r.GameId == id && r.UserId == userId);
 
         if (rating is null)
@@ -111,8 +98,8 @@ public class UserRatingService : IUserRatingService
             return GameErrors.UserRatingNotFound;
         }
 
-        _dbContext.UserRatings.Remove(rating);
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        dbContext.UserRatings.Remove(rating);
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         return result ? Result.Success() : GameErrors.UserRatingNotDeleted;
     }

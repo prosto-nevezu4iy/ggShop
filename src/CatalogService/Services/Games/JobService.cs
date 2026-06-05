@@ -5,15 +5,8 @@ using static CatalogService.Constants.GameConstants;
 
 namespace CatalogService.Services.Games;
 
-public class JobService : IJobService
+public class JobService(ISchedulerFactory schedulerFactory) : IJobService
 {
-    private readonly ISchedulerFactory _schedulerFactory;
-
-    public JobService(ISchedulerFactory schedulerFactory)
-    {
-        _schedulerFactory = schedulerFactory;
-    }
-
     public async Task UploadImageJob(Guid gameId, string imageUrl)
     {
         IJobDetail job = JobBuilder.Create<UploadImageJob>()
@@ -27,7 +20,7 @@ public class JobService : IJobService
             .StartNow()
         .Build();
 
-        var scheduler = await _schedulerFactory.GetScheduler();
+        var scheduler = await schedulerFactory.GetScheduler();
 
         if (await scheduler.CheckExists(job.Key))
         {
@@ -55,7 +48,7 @@ public class JobService : IJobService
             .StartNow()
         .Build();
 
-        var scheduler = await _schedulerFactory.GetScheduler();
+        var scheduler = await schedulerFactory.GetScheduler();
 
         if (await scheduler.CheckExists(job.Key))
         {
@@ -78,7 +71,7 @@ public class JobService : IJobService
             .StartNow()
             .Build();
 
-        var scheduler = await _schedulerFactory.GetScheduler();
+        var scheduler = await schedulerFactory.GetScheduler();
 
         if (await scheduler.CheckExists(job.Key))
         {
@@ -106,7 +99,7 @@ public class JobService : IJobService
             .StartNow()
         .Build();
 
-        var scheduler = await _schedulerFactory.GetScheduler();
+        var scheduler = await schedulerFactory.GetScheduler();
 
         if (await scheduler.CheckExists(job.Key))
         {

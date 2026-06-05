@@ -1,8 +1,5 @@
 ﻿using CatalogService.Extensions;
 using CatalogService.Infrastructure;
-using CatalogService.Services.Games;
-using Microsoft.OpenApi;
-using Scalar.AspNetCore;
 using Serilog;
 
 try

@@ -11,15 +11,8 @@ namespace CatalogService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PlatformsController : ControllerBase
+public class PlatformsController(IPlatformService platformService) : ControllerBase
 {
-    private readonly IPlatformService _platformService;
-
-    public PlatformsController(IPlatformService platformService)
-    {
-        _platformService = platformService;
-    }
-
     /// <summary>
     /// Gets a paginated list of platforms based on the provided filter criteria.
     /// </summary>
@@ -33,7 +26,7 @@ public class PlatformsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PaginatedItems<PlatformDto>>> GetPlatformsAsync([FromQuery] PlatformPagedFilterRequest request)
     {
-        var result = await _platformService.GetPlatformsAsync(request);
+        var result = await platformService.GetPlatformsAsync(request);
 
         return result.Match(
             value => Ok(value),
@@ -54,7 +47,7 @@ public class PlatformsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PlatformDto>> GetPlatformByIdAsync(Guid id)
     {
-        var result = await _platformService.GetPlatformByIdAsync(id);
+        var result = await platformService.GetPlatformByIdAsync(id);
 
         return result.Match(
             value => Ok(value),
@@ -82,7 +75,7 @@ public class PlatformsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<PlatformDto>> CreatePlatformAsync(CreatePlatformDto request)
     {
-        var result = await _platformService.CreatePlatformAsync(request);
+        var result = await platformService.CreatePlatformAsync(request);
 
         return result.Match(
             value => CreatedAtRoute(nameof(GetPlatformByIdAsync), new { id = value.Id }, value),
@@ -114,7 +107,7 @@ public class PlatformsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> UpdatePlatformAsync(Guid id, UpdatePlatformDto request)
     {
-        var result = await _platformService.UpdatePlatformAsync(id, request);
+        var result = await platformService.UpdatePlatformAsync(id, request);
 
         return result.Match(
             NoContent,
@@ -142,7 +135,7 @@ public class PlatformsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> DeletePlatformAsync(Guid id)
     {
-        var result = await _platformService.DeletePlatformAsync(id);
+        var result = await platformService.DeletePlatformAsync(id);
 
         return result.Match(
             NoContent,

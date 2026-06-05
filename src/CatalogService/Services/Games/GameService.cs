@@ -17,59 +17,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Services.Games;
 
-public class GameService : IGameService
+public class GameService(
+    CatalogContext dbContext,
+    IValidator<GamePagedFilterRequest> gamePagedFilterValidator,
+    IValidator<CreateGameDto> createValidator,
+    IValidator<UpdateGameDto> updateValidator,
+    IJobService jobService,
+    IPublishEndpoint publishEndpoint,
+    FilterBuilder<Game, GamePagedFilterRequest> filterBuilder,
+    ISearchBuilder<Game> searchBuilder,
+    IOrderBuilder<Game, GameSortOption> orderBuilder)
+    : IGameService
 {
-    private readonly CatalogContext _dbContext;
-    private readonly IValidator<GamePagedFilterRequest> _gamePagedFilterValidator;
-    private readonly IValidator<CreateGameDto> _createValidator;
-    private readonly IValidator<UpdateGameDto> _updateValidator;
-    private readonly IJobService _jobService;
-    private readonly IPublishEndpoint _publishEndpoint;
-    private readonly ISearchBuilder<Game> _searchBuilder;
-    private readonly FilterBuilder<Game, GamePagedFilterRequest> _filterBuilder;
-    private readonly IOrderBuilder<Game, GameSortOption> _orderBuilder;
-
-    public GameService(
-        CatalogContext dbContext,
-        IValidator<GamePagedFilterRequest> gamePagedFilterValidator,
-        IValidator<CreateGameDto> createValidator,
-        IValidator<UpdateGameDto> updateValidator,
-        IJobService jobService,
-        IPublishEndpoint publishEndpoint,
-        FilterBuilder<Game, GamePagedFilterRequest> filterBuilder,
-        ISearchBuilder<Game> searchBuilder,
-        IOrderBuilder<Game, GameSortOption> orderBuilder)
-    {
-        _dbContext = dbContext;
-        _gamePagedFilterValidator = gamePagedFilterValidator;
-        _createValidator = createValidator;
-        _updateValidator = updateValidator;
-        _jobService = jobService;
-        _publishEndpoint = publishEndpoint;
-        _filterBuilder = filterBuilder;
-        _searchBuilder = searchBuilder;
-        _orderBuilder = orderBuilder;
-    }
-
     public async Task<Result<PaginatedItems<GameDto>>> GetGamesAsync(GamePagedFilterRequest request)
     {
-        var validationResult = await _gamePagedFilterValidator.ValidateAsync(request);
+        var validationResult = await gamePagedFilterValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
         {
             return new ValidationError(validationResult.ToErrorDictionary());
         }
 
-        var query = _dbContext.Games.AsNoTracking();
+        var query = dbContext.Games.AsNoTracking();
 
-        query = _searchBuilder.Build(query, request.SearchTerm);
+        query = searchBuilder.Build(query, request.SearchTerm);
 
-        query = _filterBuilder
+        query = filterBuilder
             .Init(query)
             .ApplyFilters(request)
             .Build();
 
-        query = _orderBuilder.Build(query, request.Sort);
+        query = orderBuilder.Build(query, request.Sort);
 
         var totalItems = await query.CountAsync();
 
@@ -88,7 +66,7 @@ public class GameService : IGameService
 
     public async Task<Result<GameDto>> GetGameByIdAsync(Guid id)
     {
-        var game = await _dbContext.Games
+        var game = await dbContext.Games
             .AsNoTracking()
             .Include(x => x.Platforms)
             .Include(x => x.Genres)
@@ -102,42 +80,42 @@ public class GameService : IGameService
     }
 
     public async Task<Game> GetGameEntityByIdAsync(Guid id) =>
-        await _dbContext.Games
+        await dbContext.Games
             .SingleOrDefaultAsync(x => x.Id == id);
 
     public async Task<Result<GameDto>> CreateGameAsync(CreateGameDto createGameDto)
     {
-        var validationResult = await _createValidator.ValidateAsync(createGameDto);
+        var validationResult = await createValidator.ValidateAsync(createGameDto);
 
         if (!validationResult.IsValid)
         {
             return new ValidationError(validationResult.ToErrorDictionary());
         }
 
-        var genres = await _dbContext.Genres
+        var genres = await dbContext.Genres
             .Where(x => createGameDto.Genres.Contains(x.Id))
             .ToListAsync();
 
-        var platforms = await _dbContext.Platforms
+        var platforms = await dbContext.Platforms
             .Where(x => createGameDto.Platforms.Contains(x.Id))
             .ToListAsync();
 
-        var publisher = await _dbContext.Publishers
+        var publisher = await dbContext.Publishers
             .SingleOrDefaultAsync(x => x.Id == createGameDto.Publisher);
 
         var game = createGameDto.ToEntity(publisher, genres, platforms);
 
-        await _dbContext.Games.AddAsync(game);
+        await dbContext.Games.AddAsync(game);
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {
             return GameErrors.GameNotCreated;
         }
 
-        var uploadImageJobTask = _jobService.UploadImageJob(game.Id, createGameDto.ImageUrl);
-        var uploadScreenShotsJobTask = _jobService.UploadScreenShotsJob(game.Id, createGameDto.ScreenShotUrls);
+        var uploadImageJobTask = jobService.UploadImageJob(game.Id, createGameDto.ImageUrl);
+        var uploadScreenShotsJobTask = jobService.UploadScreenShotsJob(game.Id, createGameDto.ScreenShotUrls);
 
         await Task.WhenAll(uploadImageJobTask, uploadScreenShotsJobTask);
 
@@ -146,7 +124,7 @@ public class GameService : IGameService
 
     public async Task<Result> UpdateGameAsync(Guid id, UpdateGameDto updateGameDto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(updateGameDto);
+        var validationResult = await updateValidator.ValidateAsync(updateGameDto);
 
         if (!validationResult.IsValid)
         {
@@ -160,19 +138,19 @@ public class GameService : IGameService
             return GameErrors.NotFound(id);
         }
 
-        _dbContext.Entry(game).CurrentValues.SetValues(updateGameDto);
+        dbContext.Entry(game).CurrentValues.SetValues(updateGameDto);
 
         await UpdateGamePlatformsAsync(game, updateGameDto.Platforms);
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {
             return GameErrors.GameNotUpdated;
         }
 
-        var deleteScreenShotsJobTask = _jobService.DeleteScreenShotsJob(game.Id, game.ScreenShotUrls);
-        var uploadScreenShotsJobTask = _jobService.UploadScreenShotsJob(game.Id, updateGameDto.ScreenShotUrls);
+        var deleteScreenShotsJobTask = jobService.DeleteScreenShotsJob(game.Id, game.ScreenShotUrls);
+        var uploadScreenShotsJobTask = jobService.UploadScreenShotsJob(game.Id, updateGameDto.ScreenShotUrls);
 
         await Task.WhenAll(deleteScreenShotsJobTask, uploadScreenShotsJobTask);
 
@@ -182,13 +160,13 @@ public class GameService : IGameService
     public async Task UpdateImageUrlAsync(Game game, string imageUrl)
     {
         game.ImageUrl = imageUrl;
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateScreenShotUrlsAsync(Game game, ICollection<string> imageUrl)
     {
         game.ScreenShotUrls = imageUrl.ToList();
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task<Result> DeleteGameAsync(Guid id)
@@ -200,19 +178,19 @@ public class GameService : IGameService
             return GameErrors.NotFound(id);
         }
 
-        _dbContext.Games.Remove(game);
+        dbContext.Games.Remove(game);
 
-        await _publishEndpoint.Publish<GameDeleted>(new() {Id = game.Id});
+        await publishEndpoint.Publish<GameDeleted>(new() {Id = game.Id});
 
-        var result = await _dbContext.SaveChangesAsync() > 0;
+        var result = await dbContext.SaveChangesAsync() > 0;
 
         if (!result)
         {
             return GameErrors.GameNotDeleted;
         }
 
-        var deleteImageJobTask = _jobService.DeleteImageJob(game.Id, game.ImageUrl);
-        var deleteScreenShotsJobTask = _jobService.DeleteScreenShotsJob(game.Id, game.ScreenShotUrls);
+        var deleteImageJobTask = jobService.DeleteImageJob(game.Id, game.ImageUrl);
+        var deleteScreenShotsJobTask = jobService.DeleteScreenShotsJob(game.Id, game.ScreenShotUrls);
 
         await Task.WhenAll(deleteImageJobTask, deleteScreenShotsJobTask);
 
@@ -221,7 +199,7 @@ public class GameService : IGameService
 
     private async Task<Game> GetGameEntityWithPlatformsByIdAsync(Guid id)
     {
-        return await _dbContext.Games
+        return await dbContext.Games
             .Include(x => x.Platforms)
             .SingleOrDefaultAsync(x => x.Id == id);
     }
@@ -240,7 +218,7 @@ public class GameService : IGameService
         // Add new platforms
         if (platformIdsToAdd is { Count: > 0 })
         {
-            var platformsToAdd = await _dbContext.Platforms
+            var platformsToAdd = await dbContext.Platforms
                 .Where(p => platformIdsToAdd.Contains(p.Id))
                 .ToListAsync();
 

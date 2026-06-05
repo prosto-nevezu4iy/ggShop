@@ -11,15 +11,8 @@ namespace CatalogService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PublishersController : ControllerBase
+public class PublishersController(IPublisherService publisherService) : ControllerBase
 {
-    private readonly IPublisherService _publisherService;
-
-    public PublishersController(IPublisherService publisherService)
-    {
-        _publisherService = publisherService;
-    }
-
     /// <summary>
     /// Gets a paginated list of publishers based on the provided filter criteria.
     /// </summary>
@@ -33,7 +26,7 @@ public class PublishersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PaginatedItems<PublisherDto>>> GetPublishersAsync([FromQuery] PublisherPagedFilterRequest request)
     {
-        var result = await _publisherService.GetPublishersAsync(request);
+        var result = await publisherService.GetPublishersAsync(request);
 
         return result.Match(
             value => Ok(value),
@@ -54,7 +47,7 @@ public class PublishersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PublisherDto>> GetPublisherByIdAsync(Guid id)
     {
-        var result = await _publisherService.GetPublisherByIdAsync(id);
+        var result = await publisherService.GetPublisherByIdAsync(id);
 
         return result.Match(
             value => Ok(value),
@@ -82,7 +75,7 @@ public class PublishersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult<PublisherDto>> CreatePublisherAsync([FromBody] CreatePublisherDto request)
     {
-        var result = await _publisherService.CreatePublisherAsync(request);
+        var result = await publisherService.CreatePublisherAsync(request);
 
         return result.Match(
             value => CreatedAtRoute(nameof(GetPublisherByIdAsync), new { id = value.Id }, value),
@@ -114,7 +107,7 @@ public class PublishersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> UpdatePublisherAsync(Guid id, UpdatePublisherDto request)
     {
-        var result = await _publisherService.UpdatePublisherAsync(id, request);
+        var result = await publisherService.UpdatePublisherAsync(id, request);
 
         return result.Match(
             NoContent,
@@ -142,7 +135,7 @@ public class PublishersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> DeletePublisherAsync(Guid id)
     {
-        var result = await _publisherService.DeletePublisherAsync(id);
+        var result = await publisherService.DeletePublisherAsync(id);
 
         return result.Match(
             NoContent,
