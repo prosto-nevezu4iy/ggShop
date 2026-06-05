@@ -19,8 +19,5 @@ public sealed class IdentitySettings
     public string ClientId { get; init; }
 
     [Required]
-    public string ClientSecret { get; init; }
-
-    [Required]
     public Dictionary<string, string> Scopes { get; set; } = new();
 }

@@ -30,7 +30,7 @@ public class PublishersController(IPublisherService publisherService) : Controll
 
         return result.Match(
             value => Ok(value),
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -51,7 +51,7 @@ public class PublishersController(IPublisherService publisherService) : Controll
 
         return result.Match(
             value => Ok(value),
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -79,7 +79,7 @@ public class PublishersController(IPublisherService publisherService) : Controll
 
         return result.Match(
             value => CreatedAtRoute(nameof(GetPublisherByIdAsync), new { id = value.Id }, value),
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -111,7 +111,7 @@ public class PublishersController(IPublisherService publisherService) : Controll
 
         return result.Match(
             NoContent,
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -139,7 +139,7 @@ public class PublishersController(IPublisherService publisherService) : Controll
 
         return result.Match(
             NoContent,
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 }

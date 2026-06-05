@@ -9,11 +9,14 @@ using static ShoppingCartService.Constants.ShoppingCartConstants;
 
 namespace ShoppingCartService.Repositories;
 
-public class RedisShoppingCartRepository : IShoppingCartRepository
+public class RedisShoppingCartRepository(
+    ILogger<RedisShoppingCartRepository> logger,
+    IConnectionMultiplexer redis,
+    IOptions<ShoppingCartSettings> options)
+    : IShoppingCartRepository
 {
-    private readonly ILogger<RedisShoppingCartRepository> _logger;
-    private readonly IDatabase _redisDatabase;
-    private readonly ShoppingCartSettings _shoppingCartSettings;
+    private readonly IDatabase _redisDatabase = redis.GetDatabase();
+    private readonly ShoppingCartSettings _shoppingCartSettings = options.Value;
 
     private static readonly RedisKey ShoppingCartKeyPrefix = KeyPrefix;
 
@@ -31,16 +34,6 @@ public class RedisShoppingCartRepository : IShoppingCartRepository
     private static readonly JsonSerializerOptions JsonSerializerOptions =
         new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, Converters = { new ShoppingCartJsonConverter() }};
 
-    public RedisShoppingCartRepository(
-        ILogger<RedisShoppingCartRepository> logger,
-        IConnectionMultiplexer redis,
-        IOptions<ShoppingCartSettings> options)
-    {
-        _logger = logger;
-        _redisDatabase = redis.GetDatabase();
-        _shoppingCartSettings = options.Value;
-    }
-
     public async Task<ShoppingCart> GetShoppingCartAsync(Guid userId)
     {
         var data = await _redisDatabase.StringGetAsync(GetShoppingCartKey(userId));
@@ -55,11 +48,11 @@ public class RedisShoppingCartRepository : IShoppingCartRepository
 
         if (!createdShoppingCart)
         {
-            _logger.LogError("Problem occurred persisting the shopping cart for user {UserId}.", shoppingCart.UserId);
+            logger.LogError("Problem occurred persisting the shopping cart for user {UserId}.", shoppingCart.UserId);
             return null;
         }
 
-        _logger.LogInformation("ShoppingCart item persisted successfully for user {UserId}.", shoppingCart.UserId);
+        logger.LogInformation("ShoppingCart item persisted successfully for user {UserId}.", shoppingCart.UserId);
 
         return await GetShoppingCartAsync(shoppingCart.UserId);
     }
@@ -70,11 +63,11 @@ public class RedisShoppingCartRepository : IShoppingCartRepository
 
         if (!shoppingCartDeleted)
         {
-            _logger.LogError("Problem occurred deleting the shopping cart for user {UserId}.", userId);
+            logger.LogError("Problem occurred deleting the shopping cart for user {UserId}.", userId);
             return false;
         }
 
-        _logger.LogInformation("ShoppingCart deleted successfully for user {UserId}.", userId);
+        logger.LogInformation("ShoppingCart deleted successfully for user {UserId}.", userId);
         return true;
     }
 
@@ -127,7 +120,7 @@ public class RedisShoppingCartRepository : IShoppingCartRepository
         var anonCart = await GetShoppingCartAsync(anonymousId);
         if (anonCart is null)
         {
-            _logger.LogInformation("No anonymous cart for {AnonId}", anonymousId);
+            logger.LogInformation("No anonymous cart for {AnonId}", anonymousId);
             return;
         }
 
@@ -155,7 +148,7 @@ public class RedisShoppingCartRepository : IShoppingCartRepository
     private async Task ExecuteBatchAsync(Guid gameId, List<RedisKey> keys, List<RedisValue> values)
     {
         var result = (int) await _redisDatabase.ScriptEvaluateAsync(SetexLuaScript, keys.ToArray(), values.ToArray());
-        _logger.LogInformation("Updated {Count} carts - removed game {GameId}", result, gameId);
+        logger.LogInformation("Updated {Count} carts - removed game {GameId}", result, gameId);
     }
 
     private static void ResetBatch(List<RedisKey> keys, List<RedisValue> values, int expirySeconds)

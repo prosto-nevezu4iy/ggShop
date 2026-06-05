@@ -23,13 +23,15 @@ public static class Config
             ClientId = "scalar",
             ClientName = "Scalar",
             AllowedScopes = { "openid", "profile", "catalogApp", "shoppingCartApp" },
-            RedirectUris = { "http://localhost:7001/scalar/" },
-            ClientSecrets = [new Secret("notASecret".Sha256())],
+            RedirectUris = { "http://localhost:7001/scalar/", "http://localhost:7002/scalar/" },
+            RequireClientSecret = false,
+            RequirePkce = true,
             AllowedGrantTypes = GrantTypes.Code,
             AllowAccessTokensViaBrowser = true,
             AllowedCorsOrigins =
             {
-                "http://localhost:7001"
+                "http://localhost:7001",
+                "http://localhost:7002"
             }
         }
     ];

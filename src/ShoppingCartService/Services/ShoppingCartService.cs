@@ -8,34 +8,26 @@ using ShoppingCartService.Extensions;
 
 namespace ShoppingCartService.Services;
 
-public class ShoppingCartService : IShoppingCartService
+public class ShoppingCartService(
+    IShoppingCartRepository shoppingCartRepository,
+    ILogger<ShoppingCartService> logger,
+    IOptions<ShoppingCartSettings> options)
+    : IShoppingCartService
 {
-    private readonly IShoppingCartRepository _shoppingCartRepository;
-    private readonly ILogger<ShoppingCartService> _logger;
-    private readonly ShoppingCartSettings _shoppingCartSettings;
-
-    public ShoppingCartService(
-        IShoppingCartRepository shoppingCartRepository,
-        ILogger<ShoppingCartService> logger,
-        IOptions<ShoppingCartSettings> options)
-    {
-        _shoppingCartRepository = shoppingCartRepository;
-        _logger = logger;
-        _shoppingCartSettings = options.Value;
-    }
+    private readonly ShoppingCartSettings _shoppingCartSettings = options.Value;
 
     public async Task<ShoppingCartDto> GetShoppingCartAsync(Guid userId)
     {
-        _logger.LogDebug("Begin GetShoppingCart call from method {Method} for basket id {Id}", nameof(GetShoppingCartAsync), userId);
+        logger.LogDebug("Begin GetShoppingCart call from method {Method} for basket id {Id}", nameof(GetShoppingCartAsync), userId);
 
-        var data = await _shoppingCartRepository.GetShoppingCartAsync(userId);
+        var data = await shoppingCartRepository.GetShoppingCartAsync(userId);
 
         return data.ToDto();
     }
 
     public async Task<Result<ShoppingCartDto>> AddItemToShoppingCartAsync(Guid userId, CreateShoppingCartItemDto dto)
     {
-        var cart = await _shoppingCartRepository.GetShoppingCartAsync(userId);
+        var cart = await shoppingCartRepository.GetShoppingCartAsync(userId);
         if (cart is null)
         {
             return ShoppingCartErrors.NotFound(userId);
@@ -48,14 +40,14 @@ public class ShoppingCartService : IShoppingCartService
             return result.Error;
         }
 
-        var response = await _shoppingCartRepository.UpdateShoppingCartAsync(cart);
+        var response = await shoppingCartRepository.UpdateShoppingCartAsync(cart);
 
         return response is null ? ShoppingCartErrors.ShoppingCartNotUpdated : response.ToDto();
     }
 
     public async Task<Result<ShoppingCartDto>> UpdateQuantityAsync(Guid userId, Guid gameId, UpdateShoppingCartItemDto dto)
     {
-        var cart = await _shoppingCartRepository.GetShoppingCartAsync(userId);
+        var cart = await shoppingCartRepository.GetShoppingCartAsync(userId);
         if (cart is null)
         {
             return ShoppingCartErrors.NotFound(userId);
@@ -68,14 +60,14 @@ public class ShoppingCartService : IShoppingCartService
             return result.Error;
         }
 
-        var updatedCart = await _shoppingCartRepository.UpdateShoppingCartAsync(cart);
+        var updatedCart = await shoppingCartRepository.UpdateShoppingCartAsync(cart);
 
         return updatedCart is null ? ShoppingCartErrors.ShoppingCartNotUpdated : updatedCart.ToDto();
     }
 
     public async Task<Result> DeleteShoppingCartAsync(Guid userId)
     {
-        var result = await _shoppingCartRepository.DeleteShoppingCartAsync(userId);
+        var result = await shoppingCartRepository.DeleteShoppingCartAsync(userId);
 
         return result ? Result.Success() : ShoppingCartErrors.ShoppingCartNotDeleted;
     }

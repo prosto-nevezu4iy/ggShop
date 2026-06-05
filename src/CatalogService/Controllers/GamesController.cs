@@ -30,7 +30,7 @@ public class GamesController(IGameService gameService) : ControllerBase
 
         return result.Match(
             value => Ok(value),
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -51,7 +51,7 @@ public class GamesController(IGameService gameService) : ControllerBase
 
         return result.Match(
             value => Ok(value),
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -64,7 +64,7 @@ public class GamesController(IGameService gameService) : ControllerBase
     /// Returns a 400 Bad Request response if the request data is invalid.
     /// Returns a 401 Unauthorized response if the user is not authenticated.
     /// Returns a 403 Forbidden response if the user does not have permission to create a game.
-    /// Returns a 422 Unprocessable Entity response if the genre could not be deleted due db errors
+    /// Returns a 422 Unprocessable Entity response if the game could not be deleted due db errors
     /// </returns>
     [RequirePermission(PermissionsList.CatalogCreate)]
     [HttpPost]
@@ -79,7 +79,7 @@ public class GamesController(IGameService gameService) : ControllerBase
 
         return result.Match(
             value => CreatedAtRoute(nameof(GetGameByIdAsync), new { id = value.Id }, value),
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -94,7 +94,7 @@ public class GamesController(IGameService gameService) : ControllerBase
     /// Returns a 401 Unauthorized response if the user is not authenticated.
     /// Returns a 403 Forbidden response if the user does not have permission to update a game.
     /// Returns a 404 Not Found response if the game does not exist.
-    /// Returns a 422 Unprocessable Entity response if the genre could not be deleted due db errors.
+    /// Returns a 422 Unprocessable Entity response if the game could not be deleted due db errors.
     /// </returns>
     [RequirePermission(PermissionsList.CatalogUpdate)]
     [HttpPut("{id}")]
@@ -110,7 +110,7 @@ public class GamesController(IGameService gameService) : ControllerBase
 
         return result.Match(
             NoContent,
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 
@@ -123,7 +123,7 @@ public class GamesController(IGameService gameService) : ControllerBase
     /// Returns a 401 Unauthorized response if the user is not authenticated.
     /// Returns a 403 Forbidden response if the user does not have permission to delete a game.
     /// Returns a 404 Not Found response if the game does not exist.
-    /// Returns a 422 Unprocessable Entity response if the genre could not be deleted due db errors.
+    /// Returns a 422 Unprocessable Entity response if the game could not be deleted due db errors.
     /// </returns>
     [RequirePermission(PermissionsList.CatalogDelete)]
     [HttpDelete("{id}")]
@@ -138,7 +138,7 @@ public class GamesController(IGameService gameService) : ControllerBase
 
         return result.Match(
             NoContent,
-            ApiResults.ProblemForOk1
+            ApiResults.Problem
         );
     }
 }

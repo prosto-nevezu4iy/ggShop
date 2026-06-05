@@ -1,28 +1,12 @@
 using Common.Domain;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Presentation;
 
 public static class ApiResults
 {
-    public static Results<Ok<T>, ProblemHttpResult> ProblemForOk<T>(Result<T> result)
-    {
-        if (result.IsSuccess)
-        {
-            throw new InvalidOperationException();
-        }
-
-        return TypedResults.Problem(
-            title: GetTitle(result.Error),
-            detail: GetDetail(result.Error),
-            type: GetType(result.Error.Type),
-            statusCode: GetStatusCode(result.Error.Type),
-            extensions: GetErrors(result));
-    }
-
-    public static ActionResult<T> ProblemForOk1<T>(Result<T> result)
+    public static ActionResult<T> Problem<T>(Result<T> result)
     {
         if (result.IsSuccess)
         {
@@ -41,7 +25,7 @@ public static class ApiResults
         return new ObjectResult(problemDetails);
     }
 
-    public static ActionResult ProblemForOk1(Result result)
+    public static ActionResult Problem(Result result)
     {
         if (result.IsSuccess)
         {
@@ -61,36 +45,6 @@ public static class ApiResults
         {
             StatusCode = GetStatusCode(result.Error.Type)
         };
-    }
-
-    public static Results<Created<T>, ProblemHttpResult> ProblemForCreated<T>(Result<T> result)
-    {
-        if (result.IsSuccess)
-        {
-            throw new InvalidOperationException();
-        }
-
-        return TypedResults.Problem(
-            title: GetTitle(result.Error),
-            detail: GetDetail(result.Error),
-            type: GetType(result.Error.Type),
-            statusCode: GetStatusCode(result.Error.Type),
-            extensions: GetErrors(result));
-    }
-
-    public static Results<NoContent, ProblemHttpResult> ProblemForNoContent(Result result)
-    {
-        if (result.IsSuccess)
-        {
-            throw new InvalidOperationException();
-        }
-
-        return TypedResults.Problem(
-            title: GetTitle(result.Error),
-            detail: GetDetail(result.Error),
-            type: GetType(result.Error.Type),
-            statusCode: GetStatusCode(result.Error.Type),
-            extensions: GetErrors(result));
     }
 
     private static string GetTitle(Error error)

@@ -145,7 +145,6 @@ public static class ServiceExtensions
                 options.AddAuthorizationCodeFlow(nameof(SecuritySchemeType.OAuth2), flow =>
                 {
                     flow.ClientId = identitySettings.ClientId;
-                    flow.ClientSecret = identitySettings.ClientSecret;
                     flow.Pkce = Pkce.Sha256;
                     flow.SelectedScopes = identitySettings.Scopes.Keys;
                 });
