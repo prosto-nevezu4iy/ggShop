@@ -40,6 +40,7 @@ public class GameEntityTypeConfiguration : IEntityTypeConfiguration<Game>
             .IsRequired();
 
         builder.Property(g => g.DiscountPrice)
+            .HasPrecision(18, 2)
             .HasComputedColumnSql(@"""Price"" - (""Price"" * ""Discount"" / 100)", stored: true);
 
         builder.HasMany(g => g.Genres)
