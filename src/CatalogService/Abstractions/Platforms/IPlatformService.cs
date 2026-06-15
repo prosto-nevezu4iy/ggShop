@@ -1,6 +1,6 @@
 using CatalogService.DTOs.Platforms;
 using CatalogService.RequestHelpers;
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using Common.Domain;
 
 namespace CatalogService.Abstractions.Platforms;

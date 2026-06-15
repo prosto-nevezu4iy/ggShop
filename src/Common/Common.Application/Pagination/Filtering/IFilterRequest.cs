@@ -1,4 +1,4 @@
-namespace Common.Application.Requests.Filtering;
+namespace Common.Application.Pagination.Filtering;
 
 public interface IFilterRequest
 {

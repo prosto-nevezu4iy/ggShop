@@ -1,6 +1,6 @@
 using CatalogService.DTOs.Publishers;
 using CatalogService.RequestHelpers;
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using Common.Domain;
 
 namespace CatalogService.Abstractions.Publishers;

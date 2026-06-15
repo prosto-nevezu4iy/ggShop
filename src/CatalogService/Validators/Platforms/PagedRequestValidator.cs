@@ -1,4 +1,4 @@
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using FluentValidation;
 
 namespace CatalogService.Validators.Platforms;

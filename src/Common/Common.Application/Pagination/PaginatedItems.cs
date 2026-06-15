@@ -1,4 +1,4 @@
-﻿namespace Common.Application.Requests.Pagination;
+﻿namespace Common.Application.Pagination;
 
 public class PaginatedItems<TEntity>(int pageNumber, int pageSize, int totalCount, IEnumerable<TEntity> results) where TEntity : class
 {

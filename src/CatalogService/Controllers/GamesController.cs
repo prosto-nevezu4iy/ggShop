@@ -1,7 +1,7 @@
 using CatalogService.Abstractions.Games;
 using CatalogService.DTOs.Games;
 using CatalogService.RequestHelpers;
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using Common.Infrastructure.Authorization;
 using Common.Presentation;
 using Common.Presentation.Extensions;

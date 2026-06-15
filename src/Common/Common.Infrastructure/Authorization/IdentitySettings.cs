@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Common.Application.Configurations;
+namespace Common.Infrastructure.Authorization;
 
 public sealed class IdentitySettings
 {

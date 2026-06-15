@@ -1,4 +1,4 @@
-namespace Common.Application.Requests.Pagination;
+namespace Common.Application.Pagination;
 
 public abstract record PagedRequest
 {

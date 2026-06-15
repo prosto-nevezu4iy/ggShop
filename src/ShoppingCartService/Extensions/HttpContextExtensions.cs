@@ -1,5 +1,5 @@
 using Common.Infrastructure.Authentication;
-using static Common.Application.Constants.IdentityConstants;
+using static Common.Infrastructure.Constants.IdentityConstants;
 
 namespace ShoppingCartService.Extensions;
 

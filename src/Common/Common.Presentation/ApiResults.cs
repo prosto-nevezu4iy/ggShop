@@ -95,14 +95,14 @@ public static class ApiResults
             _ => StatusCodes.Status500InternalServerError
         };
 
-    private static Dictionary<string, object?>? GetErrors(Result result)
+    private static Dictionary<string, object> GetErrors(Result result)
     {
         if (result.Error is not ValidationError validationError)
         {
             return null;
         }
 
-        return new Dictionary<string, object?>
+        return new Dictionary<string, object>
         {
             { "errors", validationError.Errors }
         };

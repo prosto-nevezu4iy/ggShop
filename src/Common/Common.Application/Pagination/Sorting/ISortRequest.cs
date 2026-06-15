@@ -1,4 +1,4 @@
-namespace Common.Application.Requests.Sorting;
+namespace Common.Application.Pagination.Sorting;
 
 public interface ISortRequest<T> where T : struct, Enum
 {

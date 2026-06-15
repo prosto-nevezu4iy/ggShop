@@ -1,7 +1,7 @@
 using CatalogService.Abstractions.Publishers;
 using CatalogService.DTOs.Publishers;
 using CatalogService.RequestHelpers;
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using Common.Infrastructure.Authorization;
 using Common.Presentation;
 using Common.Presentation.Extensions;

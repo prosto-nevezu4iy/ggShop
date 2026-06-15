@@ -1,4 +1,4 @@
-namespace Common.Application.Constants;
+namespace Common.Infrastructure.Constants;
 
 public static class DatabaseConstants
 {

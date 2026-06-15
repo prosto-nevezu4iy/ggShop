@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using CatalogService.Abstractions;
+﻿using CatalogService.Abstractions;
 using CatalogService.Abstractions.Games;
 using CatalogService.Abstractions.Genres;
 using CatalogService.Abstractions.Platforms;
@@ -14,19 +13,15 @@ using CatalogService.Services.Genres;
 using CatalogService.Services.Platforms;
 using CatalogService.Services.Publishers;
 using CatalogService.Validators.Games;
-using Common.Application.Configurations;
+using Common.Infrastructure.Authentication;
 using Common.Infrastructure.Authorization;
-using Common.Presentation.Middlewares;
+using Common.Infrastructure.Logging;
+using Common.Presentation.Extensions;
 using FluentValidation;
 using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 using Quartz;
-using Scalar.AspNetCore;
-using Serilog;
-using static Common.Application.Constants.DatabaseConstants;
-using static Common.Application.Constants.IdentityConstants;
+using static Common.Infrastructure.Constants.DatabaseConstants;
 
 namespace CatalogService.Extensions;
 
@@ -34,18 +29,15 @@ public static class ServiceExtensions
 {
     public static void AddHostBuilderServices(this IHostBuilder hostBuilder)
     {
-        hostBuilder.UseSerilog((context, loggerConfiguration) =>
-            loggerConfiguration.ReadFrom.Configuration(context.Configuration));
+        hostBuilder.AddCommonLogging();
     }
 
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services
-            .AddControllers()
-            .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        });
+        builder.Services.AddCommonControllers();
+        builder.Services.AddCommonExceptionHandling();
+
+        var identitySettings = builder.AddCommonIdentitySettings();
 
         builder.Services
             .AddOptions<CloudinarySettings>()
@@ -53,28 +45,12 @@ public static class ServiceExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        builder.Services
-            .AddOptions<IdentitySettings>()
-            .BindConfiguration(IdentitySettings.Section)
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
-
-        var identitySettings = builder.Configuration.GetSection(IdentitySettings.Section).Get<IdentitySettings>();
-
         builder.Services.AddDbContext<CatalogContext>(opt =>
         {
             opt.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnection));
         });
 
-        AddCatalogServices(builder);
-
-        builder.Services.AddValidatorsFromAssemblyContaining<CreateGameDtoValidator>();
-
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-        builder.Services.AddProblemDetails();
-
         builder.Services.AddQuartz();
-
         builder.Services.AddQuartzHostedService(options =>
         {
             options.WaitForJobsToComplete = true;
@@ -85,7 +61,6 @@ public static class ServiceExtensions
             x.AddEntityFrameworkOutbox<CatalogContext>(o =>
             {
                 o.QueryDelay = TimeSpan.FromSeconds(10);
-
                 o.UsePostgres();
                 o.UseBusOutbox();
             });
@@ -95,70 +70,22 @@ public static class ServiceExtensions
             });
         });
 
+        builder.Services.AddCommonAuthentication(identitySettings);
+        builder.Services.AddCommonAuthorization();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateGameDtoValidator>();
+        AddCatalogServices(builder);
+
         builder.Services.AddGrpc();
-
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = identitySettings.Authority;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters.ValidateAudience = false;
-                options.TokenValidationParameters.NameClaimType = IdentityUserName;
-            });
-
-        builder.Services.AddAuthorization();
-
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.AddSecurityDefinition(nameof(SecuritySchemeType.OAuth2), new OpenApiSecurityScheme
-            {
-                Type = SecuritySchemeType.OAuth2,
-                Description = "OAuth2 Authorization Code with PKCE",
-                Flows = new OpenApiOAuthFlows
-                {
-                    AuthorizationCode = new OpenApiOAuthFlow
-                    {
-                        AuthorizationUrl = new Uri(identitySettings.AuthorizationUrl),
-                        TokenUrl = new Uri(identitySettings.TokenUrl),
-                        Scopes = identitySettings.Scopes
-                    }
-                }
-            });
-
-            options.AddSecurityRequirement(document => new()
-            {
-                [new OpenApiSecuritySchemeReference(nameof(SecuritySchemeType.OAuth2), document)] = []
-            });
-        });
+        builder.Services.AddCommonSwagger(identitySettings);
     }
 
     public static void AddMiddlewares(this WebApplication app, IConfiguration configuration)
     {
         var identitySettings = configuration.GetSection(IdentitySettings.Section).Get<IdentitySettings>();
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapSwagger("/openapi/{documentName}.json");
-            app.MapScalarApiReference(options =>
-            {
-                options.WithTitle("Catalog Service API");
-                options.AddPreferredSecuritySchemes(nameof(SecuritySchemeType.OAuth2));
-                options.AddAuthorizationCodeFlow(nameof(SecuritySchemeType.OAuth2), flow =>
-                {
-                    flow.ClientId = identitySettings.ClientId;
-                    flow.Pkce = Pkce.Sha256;
-                    flow.SelectedScopes = identitySettings.Scopes.Keys;
-                });
-            });
-        }
+        app.UseCommonScalarUi(identitySettings, "Catalog Service API");
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.UseSerilogRequestLogging();
-
-        app.UseExceptionHandler();
-
-        app.MapControllers();
+        app.UseCommonMiddlewarePipeline();
 
         app.MapGrpcService<GrpcCatalogService>();
     }

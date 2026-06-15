@@ -1,7 +1,7 @@
 ﻿using CatalogService.Enums;
-using Common.Application.Requests.Filtering;
-using Common.Application.Requests.Pagination;
-using Common.Application.Requests.Sorting;
+using Common.Application.Pagination;
+using Common.Application.Pagination.Filtering;
+using Common.Application.Pagination.Sorting;
 
 namespace CatalogService.RequestHelpers;
 

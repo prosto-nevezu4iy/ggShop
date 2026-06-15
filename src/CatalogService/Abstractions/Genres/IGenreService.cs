@@ -1,6 +1,6 @@
 using CatalogService.DTOs.Genres;
 using CatalogService.RequestHelpers;
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using Common.Domain;
 
 namespace CatalogService.Abstractions.Genres;

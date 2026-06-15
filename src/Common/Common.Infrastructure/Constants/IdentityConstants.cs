@@ -1,8 +1,7 @@
-namespace Common.Application.Constants;
+namespace Common.Infrastructure.Constants;
 
 public static class IdentityConstants
 {
-    public const string IdentityServiceUrl = "IdentityServiceUrl";
     public const string IdentityUserName = "username";
     public const string CookieName = "ShoppingCart";
 }

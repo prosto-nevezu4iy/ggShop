@@ -2,7 +2,7 @@
 using CatalogService.DTOs.Games;
 using CatalogService.Entities;
 using CatalogService.RequestHelpers;
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using Common.Domain;
 
 namespace CatalogService.Abstractions.Games;

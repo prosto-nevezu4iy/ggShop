@@ -7,7 +7,7 @@ using CatalogService.Errors;
 using CatalogService.Extensions;
 using CatalogService.Infrastructure;
 using CatalogService.RequestHelpers;
-using Common.Application.Requests.Pagination;
+using Common.Application.Pagination;
 using Common.Domain;
 using Common.Presentation.Extensions;
 using Contracts;

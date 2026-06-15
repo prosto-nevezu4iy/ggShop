@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Common.Application.Requests.Filtering;
+using Common.Application.Pagination.Filtering;
 
 namespace CatalogService.Abstractions;
 

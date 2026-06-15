@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using static Common.Application.Constants.IdentityConstants;
+using static Common.Infrastructure.Constants.IdentityConstants;
 
 namespace IdentityService.Pages.Account.Login;
 
